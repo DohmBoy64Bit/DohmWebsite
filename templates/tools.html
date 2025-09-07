@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Chrome Extension Downloader - DOHMBOY64{% endblock %}
+
+{% block meta_description %}Free Chrome extension downloader tool. Download any Chrome extension in CRX or ZIP format. Easy to use with extension URL or ID support.{% endblock %}
+
+{% block meta_keywords %}chrome extension downloader, crx downloader, chrome extension to zip, extension backup, chrome web store, dohmboy64{% endblock %}
+
+{% block og_description %}Download any Chrome extension in CRX or ZIP format. Free tool to backup and save Chrome extensions from the Chrome Web Store.{% endblock %}
+
+<!-- Add structured data for the Chrome Extension Downloader tool -->
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "DOHMBOY64 Chrome Extension Downloader",
+    "url": "https://www.dohmboy64.com/tools/chrome-downloader",
+    "description": "Free tool to download Chrome extensions in CRX or ZIP format",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "featureList": [
+        "Download extensions in CRX format",
+        "Convert extensions to ZIP format",
+        "Support for Chrome Web Store URLs",
+        "Direct extension ID input"
+    ]
+}
+</script>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl mb-8 text-center text-white font-vt323">Chrome Extension Tools</h1>
+    
+    <div class="grid grid-cols-1 gap-8">
+        <!-- Download Section -->
+        <div class="bg-gray-800 p-6 rounded-lg border-2 border-orange-500 shadow-lg">
+            <form id="extension-form" class="flex flex-col items-center max-w-2xl mx-auto">
+                <div class="text-center w-full">
+                    <label for="extension-url" class="block text-2xl mb-4 font-vt323 text-white">Chrome Web Store URL or Extension ID:</label>
+                    <input type="text" id="extension-url" name="extension-url" class="retro-input w-full" placeholder="Enter Chrome Web Store URL or Extension ID">
+                </div>
+
+                <div class="flex justify-center gap-8 mb-6">
+                    <label class="flex items-center">
+                        <input type="radio" name="format" value="crx" class="retro-radio" checked>
+                        <span class="text-xl">CRX Format</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="format" value="zip" class="retro-radio">
+                        <span class="text-xl">ZIP Format</span>
+                    </label>
+                </div>
+
+                <div class="flex justify-center">
+                    <button type="submit" class="retro-button">Download Extension</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Help Section -->
+        <div class="bg-gray-800 p-6 rounded-lg border-2 border-orange-500 shadow-lg">
+            <h2 class="text-2xl mb-4 font-vt323">Help</h2>
+            <p class="mb-2">To find an extension's ID:</p>
+            <ol class="list-decimal list-inside space-y-2">
+                <li>Go to the Chrome Web Store</li>
+                <li>Find the extension you want to download</li>
+                <li>The ID is the long string of letters in the URL</li>
+                <li>Example: https://chrome.google.com/webstore/detail/extension-name/<strong>abcdefghijklmnopqrstuvwxyz123456</strong></li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<!-- Error Console Elements -->
+<div class="error-console-overlay"></div>
+<div class="error-console"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tools.js') }}"></script>
+{% endblock %} 

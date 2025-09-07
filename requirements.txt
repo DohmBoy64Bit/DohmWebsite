@@ -1,0 +1,13 @@
+Flask==3.0.0
+Werkzeug==3.0.1
+requests>=2.32.3
+python-dotenv==1.0.0
+tinydb==4.8.0
+upstash-redis==1.0.0
+asgiref==3.7.2
+hypercorn==0.15.0
+better-profanity==0.7.0
+vercel_blob==0.3.0
+python-multipart==0.0.6
+pywin32==306; platform_system == "Windows"
+psutil==5.9.8

@@ -1,0 +1,383 @@
+body {
+    background: #1a1a1a;
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+}
+
+.retro-container {
+    background: linear-gradient(45deg, #1a1a1a 25%, #2a2a2a 25%, #2a2a2a 50%, #1a1a1a 50%, #1a1a1a 75%, #2a2a2a 75%, #2a2a2a);
+    background-size: 10px 10px;
+}
+
+.logo-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        filter: drop-shadow(0 0 5px #f4511e) drop-shadow(0 0 10px #f4511e);
+    }
+    to {
+        filter: drop-shadow(0 0 10px #fb8c00) drop-shadow(0 0 20px #fb8c00);
+    }
+}
+
+.retro-button {
+    background: #1a1a1a;
+    color: #fbbf24;
+    padding: 0.75rem 1rem;
+    border: 4px solid #f97316;
+    box-shadow: 
+        inset 0 0 15px #f97316,
+        4px 4px 0 #000;
+    transition: all 0.2s;
+    font-family: 'VT323', monospace;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    min-width: 180px;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+    position: relative;
+    text-shadow: 0 0 10px #f97316;
+    letter-spacing: 2px;
+}
+
+.retro-button:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 
+        inset 0 0 20px #f97316,
+        6px 6px 0 #000;
+    text-decoration: none;
+    color: #fbbf24;
+    border-color: #fb8c00;
+}
+
+/* Add glow effect around the button */
+.retro-button::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 2px solid #f97316;
+    box-shadow: 0 0 10px #f97316;
+    opacity: 0.5;
+    pointer-events: none;
+    animation: buttonGlow 2s ease-in-out infinite alternate;
+}
+
+/* Add scanline effect to buttons */
+.retro-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0%,
+        rgba(249, 115, 22, 0.05) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+    pointer-events: none;
+    animation: buttonScanline 8s linear infinite;
+}
+
+@keyframes buttonScanline {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 0 100%;
+    }
+}
+
+@keyframes buttonGlow {
+    from {
+        opacity: 0.3;
+        box-shadow: 0 0 5px #f97316;
+    }
+    to {
+        opacity: 0.6;
+        box-shadow: 0 0 15px #f97316;
+    }
+}
+
+/* Add press effect */
+.retro-button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 
+        inset 0 0 25px #f97316,
+        2px 2px 0 #000;
+}
+
+.scanline {
+    background: linear-gradient(to bottom,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 10%,
+        rgba(255, 255, 255, 0) 100%);
+    animation: scanline 8s linear infinite;
+}
+
+@keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+/* Retro Loading Animation */
+.retro-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'VT323', monospace;
+    animation: glitch 0.3s infinite;
+}
+
+.loading-content {
+    background: #000;
+    padding: 2rem;
+    border: 2px solid #f97316;
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
+    text-align: center;
+    min-width: 300px;
+}
+
+.loading-text {
+    color: #00ff00;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 5px #00ff00;
+    animation: textPulse 1s infinite;
+    font-family: 'VT323', monospace;
+}
+
+.loading-bar {
+    height: 20px;
+    background: #111;
+    border: 2px solid #f97316;
+    position: relative;
+    overflow: hidden;
+}
+
+.loading-progress {
+    height: 100%;
+    background: #00ff00;
+    width: 0;
+    transition: width 2s linear;
+    position: relative;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+.loading-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+    );
+    animation: progressGlow 1s linear infinite;
+}
+
+/* Loading Animations */
+@keyframes textPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(0.98);
+    }
+}
+
+@keyframes progressGlow {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-1px, 1px);
+    }
+    40% {
+        transform: translate(1px, -1px);
+    }
+    60% {
+        transform: translate(-1px, -1px);
+    }
+    80% {
+        transform: translate(1px, 1px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+.retro-loading.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+}
+
+/* Scanlines effect for loading screen */
+.retro-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%,
+        rgba(0, 0, 0, 0.25) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    animation: scanlines 1s linear infinite;
+}
+
+@keyframes scanlines {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 4px;
+    }
+}
+
+/* Typewriter Effect */
+.typewriter {
+    font-family: 'VT323', monospace;
+    color: #fbbf24;
+    text-shadow: 0 0 10px #f97316;
+    position: relative;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.typewriter::before {
+    content: '> ';
+    color: #fbbf24;
+    text-shadow: 0 0 10px #f97316;
+}
+
+.typewriter-cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1em;
+    background-color: #fbbf24;
+    vertical-align: middle;
+    margin-left: 2px;
+    box-shadow: 0 0 10px #f97316;
+    transition: opacity 0.1s ease;
+}
+
+/* Console window effect */
+.console-window {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #f97316;
+    border-radius: 4px;
+    padding: 1.5rem;
+    position: relative;
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+}
+
+.console-window::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Make the title text yellow like in the image */
+.typewriter-title {
+    color: #fbbf24 !important;
+    text-shadow: 0 0 10px #f97316 !important;
+}
+
+.error-console {
+    font-family: 'VT323', monospace;
+    font-size: 1.5rem;
+}
+
+.copyright-text {
+    color: #fbbf24;
+    text-shadow: 0 0 10px #f97316;
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    animation: copyrightGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes copyrightGlow {
+    from {
+        text-shadow: 0 0 5px #f97316;
+    }
+    to {
+        text-shadow: 0 0 15px #f97316;
+    }
+}
+
+.glowing-green-text {
+    color: #00ff00 !important;
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+    animation: greenPulse 2s ease-in-out infinite;
+}
+
+@keyframes greenPulse {
+    0%, 100% {
+        text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+    }
+    50% {
+        text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+    }
+}
+
+.main-intro-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 1s ease-in-out;
+} 

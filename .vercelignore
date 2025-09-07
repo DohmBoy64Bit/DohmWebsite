@@ -1,0 +1,15 @@
+.git/
+.git/objects/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.log
+tests/
+docs/
+.venv/
+env/
+venv/
+node_modules/
+.DS_Store

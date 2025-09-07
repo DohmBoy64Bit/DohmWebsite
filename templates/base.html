@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}DOHMBOY64 - Retro-themed tools and utilities for developers and gamers{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}dohmboy64, tools, chrome extension downloader, url shortener, retro, gaming{% endblock %}">
+    <meta name="author" content="DOHMBOY64">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ self.meta_description() }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='images/logo.png') }}{% endblock %}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ request.url }}">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ self.title() }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ self.meta_description() }}{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ self.og_image() }}{% endblock %}">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ request.url }}">
+    
+    <title>{% block title %}DOHMBOY64{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "DOHMBOY64",
+        "url": "https://www.dohmboy64.com",
+        "description": "{{ self.meta_description() }}",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://www.dohmboy64.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+    <!-- Critical CSS -->
+    <style>
+        /* Hide content until CSS is loaded */
+        .js-loading * {
+            visibility: hidden;
+        }
+        
+        .js-loading .loading {
+            visibility: visible;
+        }
+
+        /* Critical styles that prevent layout shift */
+        body {
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'VT323', monospace;
+        }
+
+        .retro-container {
+            min-height: 100vh;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .retro-container.loaded {
+            opacity: 1;
+        }
+
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'VT323', monospace;
+            color: #00ff00;
+            text-align: center;
+        }
+    </style>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=VT323&display=swap" as="style">
+    <link rel="preload" href="{{ url_for('static', filename='css/main.css') }}" as="style">
+    <link rel="preload" href="{{ url_for('static', filename='js/tailwind.min.js') }}" as="script">
+    
+    <!-- Load styles -->
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/tailwind.min.js') }}" defer></script>
+    
+    <!-- Page-specific CSS -->
+    {% block styles %}{% endblock %}
+    
+    <!-- Common JavaScript -->
+    <script src="{{ url_for('static', filename='js/loading.js') }}" defer></script>
+    {% block head_scripts %}{% endblock %}
+
+    <script>
+        // Add loading class to body
+        document.documentElement.classList.add('js-loading');
+        
+        // Remove loading class when resources are loaded
+        window.addEventListener('load', () => {
+            document.documentElement.classList.remove('js-loading');
+            document.querySelector('.retro-container').classList.add('loaded');
+            document.querySelector('.loading').style.display = 'none';
+        });
+    </script>
+</head>
+<body class="text-white">
+    <!-- Loading indicator -->
+    <div class="loading">LOADING...</div>
+
+    <div class="scanline fixed inset-0 pointer-events-none"></div>
+    <div class="retro-container min-h-screen">
+        {% if request.endpoint == 'index' %}
+        <div class="main-intro-screen">
+            <div class="typewriter">
+                <span class="typewriter-title">WELCOME TO THE THUNDERDOHM</span>
+                <span class="typewriter-cursor"></span>
+            </div>
+        </div>
+        {% endif %}
+        <div class="container mx-auto px-4 py-16">
+            <div class="flex flex-col items-center justify-center space-y-12">
+                <a href="/" class="logo-glow w-48 md:w-64 transition-transform hover:scale-105 duration-300">
+                    <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Dohmbdy64 Logo" class="w-full h-auto">
+                </a>
+                
+                {% block content %}{% endblock %}
+
+                <div class="mt-16">
+                    <p class="copyright-text">© 2024 DOHMBOY64 - INSERT COIN TO CONTINUE</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page-specific JavaScript -->
+    {% block scripts %}{% endblock %}
+</body>
+</html> 
