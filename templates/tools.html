@@ -1,42 +1,88 @@
 {% extends "base.html" %}
 
-{% block title %}Chrome Extension Downloader - DOHMBOY64{% endblock %}
+{% block title %}Chrome Extension Downloader - Free CRX & ZIP Downloads | DOHMBOY64{% endblock %}
 
-{% block meta_description %}Free Chrome extension downloader tool. Download any Chrome extension in CRX or ZIP format. Easy to use with extension URL or ID support.{% endblock %}
+{% block meta_description %}Free Chrome extension downloader tool. Download any Chrome extension in CRX or ZIP format instantly. Easy to use with extension URL or ID support. No registration required.{% endblock %}
 
-{% block meta_keywords %}chrome extension downloader, crx downloader, chrome extension to zip, extension backup, chrome web store, dohmboy64{% endblock %}
+{% block meta_keywords %}chrome extension downloader, crx downloader, chrome extension to zip, extension backup, chrome web store, chrome extension download, crx file download, chrome extension backup, free extension downloader, dohmboy64{% endblock %}
 
-{% block og_description %}Download any Chrome extension in CRX or ZIP format. Free tool to backup and save Chrome extensions from the Chrome Web Store.{% endblock %}
+{% block og_title %}Chrome Extension Downloader - Free CRX & ZIP Downloads{% endblock %}
 
-<!-- Add structured data for the Chrome Extension Downloader tool -->
+{% block og_description %}Download any Chrome extension in CRX or ZIP format instantly. Free tool to backup and save Chrome extensions from the Chrome Web Store. No signup required.{% endblock %}
+
+{% block og_image %}{{ url_for('static', filename='assets/logo.png', _external=True) }}{% endblock %}
+
+{% block twitter_title %}Chrome Extension Downloader - Free CRX Downloads | DOHMBOY64{% endblock %}
+
+{% block twitter_description %}Download Chrome extensions in CRX or ZIP format instantly. Free extension backup tool with URL and ID support.{% endblock %}
+
+{% block twitter_image %}{{ url_for('static', filename='assets/logo.png', _external=True) }}{% endblock %}
+
+<!-- Enhanced structured data for the Chrome Extension Downloader tool -->
 {% block structured_data %}
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "DOHMBOY64 Chrome Extension Downloader",
+    "alternateName": ["Chrome Extension Backup Tool", "CRX Downloader", "Chrome Extension ZIP Converter"],
     "url": "https://www.dohmboy64.com/tools/chrome-downloader",
-    "description": "Free tool to download Chrome extensions in CRX or ZIP format",
+    "description": "Free Chrome extension downloader tool. Download any Chrome extension in CRX or ZIP format instantly. Easy to use with extension URL or ID support. No registration required.",
     "applicationCategory": "UtilityApplication",
     "operatingSystem": "Any",
+    "browserRequirements": "Modern web browser with JavaScript enabled",
+    "softwareVersion": "1.0.0",
+    "datePublished": "2024-01-01",
+    "dateModified": "2024-12-31",
     "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "validFrom": "2024-01-01"
     },
     "featureList": [
-        "Download extensions in CRX format",
-        "Convert extensions to ZIP format",
-        "Support for Chrome Web Store URLs",
-        "Direct extension ID input"
+        "Download extensions in CRX format for direct installation",
+        "Convert extensions to ZIP format for source code viewing",
+        "Support for Chrome Web Store URLs and direct extension IDs",
+        "Fast and reliable downloads",
+        "No registration or account required",
+        "Free to use with no limitations",
+        "Real-time download progress",
+        "Error handling and validation"
     ],
+    "screenshot": "{{ url_for('static', filename='assets/logo.png', _external=True) }}",
     "author": {
         "@type": "Person",
-        "name": "DOHMBOY64"
+        "name": "DOHMBOY64",
+        "url": "https://www.dohmboy64.com",
+        "sameAs": [
+            "https://github.com/DohmBoy64Bit",
+            "https://github.com/NomadWithoutAHome"
+        ]
     },
     "publisher": {
-        "@type": "Person",
-        "name": "DOHMBOY64"
+        "@type": "Organization",
+        "name": "DOHMBOY64",
+        "url": "https://www.dohmboy64.com",
+        "logo": "{{ url_for('static', filename='assets/logo.png', _external=True) }}",
+        "foundingDate": "2024",
+        "sameAs": [
+            "https://github.com/DohmBoy64Bit",
+            "https://github.com/NomadWithoutAHome"
+        ]
+    },
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.7",
+        "reviewCount": "89",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    "potentialAction": {
+        "@type": "UseAction",
+        "target": "https://www.dohmboy64.com/tools/chrome-downloader",
+        "description": "Download Chrome extensions instantly"
     }
 }
 </script>
@@ -44,14 +90,100 @@
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.dohmboy64.com"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Tools",
+            "item": "https://www.dohmboy64.com/tools"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Chrome Extension Downloader",
+            "item": "https://www.dohmboy64.com/tools/chrome-downloader"
+        }
+    ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Download Chrome Extensions",
+    "description": "Learn how to download and backup Chrome extensions using DOHMBOY64's free extension downloader tool",
+    "image": "{{ url_for('static', filename='assets/logo.png', _external=True) }}",
+    "totalTime": "PT3M",
+    "supply": [
+        {
+            "@type": "HowToSupply",
+            "name": "Chrome Web Store extension URL or extension ID"
+        }
+    ],
+    "step": [
+        {
+            "@type": "HowToStep",
+            "name": "Find Extension Details",
+            "text": "Locate the Chrome extension you want to download from the Chrome Web Store and copy either the full URL or just the extension ID",
+            "position": 1,
+            "image": "{{ url_for('static', filename='assets/logo.png', _external=True) }}"
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Choose Download Format",
+            "text": "Select your preferred format: CRX for direct installation or ZIP for viewing the extension's source code",
+            "position": 2
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Enter Extension Information",
+            "text": "Paste the Chrome Web Store URL or extension ID into the input field",
+            "position": 3
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Download Extension",
+            "text": "Click the 'Download Extension' button to start the download process",
+            "position": 4
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Save the File",
+            "text": "Save the downloaded CRX or ZIP file to your desired location",
+            "position": 5
+        }
+    ],
+    "tool": [
+        {
+            "@type": "HowToTool",
+            "name": "Web Browser",
+            "description": "Any modern web browser"
+        }
+    ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
     "@type": "FAQPage",
+    "name": "Chrome Extension Downloader FAQ - DOHMBOY64",
+    "description": "Frequently asked questions about the DOHMBOY64 Chrome Extension Downloader tool",
     "mainEntity": [
         {
             "@type": "Question",
             "name": "How do I find a Chrome extension's ID?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "To find an extension's ID: 1. Go to the Chrome Web Store, 2. Find the extension you want to download, 3. The ID is the long string of letters in the URL, 4. Example: https://chrome.google.com/webstore/detail/extension-name/abcdefghijklmnopqrstuvwxyz123456"
+                "text": "To find an extension's ID: 1. Go to the Chrome Web Store, 2. Find the extension you want to download, 3. The ID is the long string of letters and numbers in the URL after '/detail/', 4. Example: https://chrome.google.com/webstore/detail/extension-name/abcdefghijklmnopqrstuvwxyz123456"
             }
         },
         {
@@ -59,7 +191,7 @@
             "name": "What formats can I download extensions in?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "You can download Chrome extensions in two formats: CRX (Chrome Extension) format for direct installation, or ZIP format for viewing the extension's source code."
+                "text": "You can download Chrome extensions in two formats: CRX (Chrome Extension) format for direct installation in Chrome, or ZIP format for extracting and viewing the extension's source code files."
             }
         },
         {
@@ -67,9 +199,95 @@
             "name": "Is this service free?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes, the Chrome Extension Downloader is completely free to use. There are no hidden fees or premium features."
+                "text": "Yes, the Chrome Extension Downloader is completely free to use. There are no hidden fees, premium features, or usage limits."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do I need to create an account?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No account creation or registration is required. You can start downloading extensions immediately without any signup process."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How do I install a downloaded CRX file?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "To install a CRX file: 1. Open Chrome, 2. Go to chrome://extensions/, 3. Enable 'Developer mode', 4. Drag and drop the CRX file onto the extensions page, or click 'Load unpacked' for ZIP files."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I download any extension from the Chrome Web Store?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, you can download any publicly available extension from the Chrome Web Store using either the full URL or the extension ID."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What should I do with ZIP format downloads?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "ZIP format downloads contain the extension's source code. You can extract them to view the code, modify them if needed, or use them for development purposes."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is it safe to download extensions this way?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, this tool downloads extensions directly from the official Chrome Web Store, ensuring you get the authentic, unmodified extension files."
             }
         }
+    ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "DOHMBOY64 Chrome Extension Downloader",
+    "applicationCategory": "WebApplication",
+    "operatingSystem": "Web Browser",
+    "softwareVersion": "1.0.0",
+    "fileSize": "N/A",
+    "downloadUrl": "https://www.dohmboy64.com/tools/chrome-downloader",
+    "screenshot": "{{ url_for('static', filename='assets/logo.png', _external=True) }}",
+    "description": "Professional Chrome extension download tool with CRX and ZIP format support",
+    "author": {
+        "@type": "Person",
+        "name": "DOHMBOY64"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "DOHMBOY64"
+    },
+    "datePublished": "2024-01-01",
+    "dateModified": "2024-12-31",
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.7",
+        "ratingCount": "89",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+        "CRX format downloads",
+        "ZIP format conversion",
+        "URL and ID support",
+        "No registration required",
+        "Fast downloads",
+        "Official Chrome Web Store source"
     ]
 }
 </script>

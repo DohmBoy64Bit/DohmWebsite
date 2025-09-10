@@ -32,19 +32,115 @@
     
     <!-- Structured Data -->
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "DOHMBOY64",
-        "url": "https://www.dohmboy64.com",
-        "description": "{{ self.meta_description() }}",
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://www.dohmboy64.com/search?q={search_term_string}",
-            "query-input": "required name=search_term_string"
+    [
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "DOHMBOY64",
+            "url": "https://www.dohmboy64.com",
+            "logo": "{{ url_for('static', filename='assets/logo.png', _external=True) }}",
+            "description": "Retro-themed tools and utilities for developers and gamers",
+            "founder": {
+                "@type": "Person",
+                "name": "DOHMBOY64"
+            },
+            "sameAs": [
+                "https://github.com/DohmBoy64Bit",
+                "https://github.com/NomadWithoutAHome"
+            ],
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "technical support",
+                "url": "https://www.dohmboy64.com"
+            }
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "DOHMBOY64",
+            "url": "https://www.dohmboy64.com",
+            "description": "{{ self.meta_description() }}",
+            "publisher": {
+                "@type": "Organization",
+                "name": "DOHMBOY64"
+            },
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.dohmboy64.com/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            },
+            "mainEntity": {
+                "@type": "ItemList",
+                "name": "Tools & Games",
+                "description": "Collection of retro-themed tools and games",
+                "numberOfItems": 6,
+                "itemListElement": [
+                    {
+                        "@type": "SoftwareApplication",
+                        "name": "Chrome Extension Downloader",
+                        "description": "Download Chrome extensions directly",
+                        "url": "{{ url_for('pages.chrome_downloader', _external=True) }}",
+                        "applicationCategory": "DeveloperApplication",
+                        "operatingSystem": "Web Browser"
+                    },
+                    {
+                        "@type": "SoftwareApplication",
+                        "name": "URL Shortener",
+                        "description": "Create short URLs for easy sharing",
+                        "url": "{{ url_for('shortener.url_shortener_page', _external=True) }}",
+                        "applicationCategory": "WebApplication",
+                        "operatingSystem": "Web Browser"
+                    },
+                    {
+                        "@type": "VideoGame",
+                        "name": "The Simpsons Arcade Game",
+                        "description": "Classic arcade game emulator",
+                        "url": "{{ url_for('pages.play', _external=True) }}",
+                        "gamePlatform": "Web Browser",
+                        "genre": "Arcade"
+                    },
+                    {
+                        "@type": "SoftwareApplication",
+                        "name": "Image Uploader",
+                        "description": "Upload images via API",
+                        "url": "{{ url_for('image_routes.image_uploader_page', _external=True) }}",
+                        "applicationCategory": "WebApplication",
+                        "operatingSystem": "Web Browser"
+                    },
+                    {
+                        "@type": "SoftwareApplication",
+                        "name": "Garden Growth Calculator",
+                        "description": "Calculate garden fruit growth",
+                        "url": "https://www.fruitcalculator.dohmboy64.com/",
+                        "applicationCategory": "Utility",
+                        "operatingSystem": "Web Browser"
+                    }
+                ]
+            }
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "{{ self.title() }}",
+            "url": "{{ request.url }}",
+            "description": "{{ self.meta_description() }}",
+            "isPartOf": {
+                "@type": "WebSite",
+                "name": "DOHMBOY64",
+                "url": "https://www.dohmboy64.com"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "DOHMBOY64"
+            },
+            "datePublished": "2024-01-01",
+            "dateModified": "2024-12-31"
         }
-    }
+    ]
     </script>
+
+    <!-- Page-specific structured data -->
+    {% block structured_data %}{% endblock %}
     
     <!-- Critical CSS -->
     <style>

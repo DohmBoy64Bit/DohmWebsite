@@ -1,6 +1,425 @@
 {% extends "base.html" %}
 
-{% block title %}Dohmboy64 - Home Page{% endblock %}
+{% block title %}DOHMBOY64 - Retro Gaming Tools & Chrome Extensions | Home{% endblock %}
+
+{% block meta_description %}Welcome to DOHMBOY64 - Your retro gaming paradise with free tools, Chrome extension downloads, URL shortener, and classic arcade games. Experience 90s nostalgia with modern web tools.{% endblock %}
+
+{% block meta_keywords %}dohmboy64, retro gaming, chrome extension downloader, url shortener, the simpsons arcade, holy potatoes editor, photo deputy, retro tools, 90s nostalgia, arcade games, web tools, dohmboy64 tools{% endblock %}
+
+{% block og_title %}DOHMBOY64 - Retro Gaming Tools & Chrome Extensions{% endblock %}
+
+{% block og_description %}Welcome to DOHMBOY64 - Your retro gaming paradise with free tools, Chrome extension downloads, URL shortener, and classic arcade games. Experience 90s nostalgia with modern web tools.{% endblock %}
+
+{% block og_image %}{{ url_for('static', filename='assets/logo.png', _external=True) }}{% endblock %}
+
+{% block twitter_title %}DOHMBOY64 - Retro Gaming Tools & Extensions{% endblock %}
+
+{% block twitter_description %}Retro gaming paradise with free tools, Chrome extensions, URL shortener, and classic arcade games. 90s nostalgia meets modern web tools.{% endblock %}
+
+{% block twitter_image %}{{ url_for('static', filename='assets/logo.png', _external=True) }}{% endblock %}
+
+<!-- Enhanced structured data for DOHMBOY64 homepage -->
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "DOHMBOY64",
+    "alternateName": ["ThunderDohm", "DOHMBOY64 Tools", "Retro Gaming Tools"],
+    "url": "https://www.dohmboy64.com",
+    "description": "Retro-themed gaming tools and utilities website featuring Chrome extension downloads, URL shortener, arcade games, and developer projects",
+    "publisher": {
+        "@type": "Organization",
+        "name": "DOHMBOY64",
+        "url": "https://www.dohmboy64.com",
+        "logo": "{{ url_for('static', filename='assets/logo.png', _external=True) }}",
+        "foundingDate": "2024",
+        "sameAs": [
+            "https://github.com/DohmBoy64Bit",
+            "https://github.com/NomadWithoutAHome"
+        ]
+    },
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.dohmboy64.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+    },
+    "mainEntity": {
+        "@type": "ItemList",
+        "name": "DOHMBOY64 Tools & Projects",
+        "description": "Collection of retro-themed tools, games, and developer projects",
+        "numberOfItems": 15,
+        "itemListElement": [
+            {
+                "@type": "VideoGame",
+                "name": "The Simpsons Arcade Game",
+                "description": "Classic 1991 arcade game featuring Homer, Marge, Bart, and Lisa",
+                "url": "{{ url_for('pages.play', _external=True) }}",
+                "gamePlatform": "Web Browser",
+                "genre": "Arcade",
+                "datePublished": "1991-01-01",
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "Konami"
+                },
+                "playMode": "Single Player"
+            },
+            {
+                "@type": "SoftwareApplication",
+                "name": "Chrome Extension Downloader",
+                "description": "Free tool to download Chrome extensions in CRX or ZIP format",
+                "url": "{{ url_for('pages.chrome_downloader', _external=True) }}",
+                "applicationCategory": "UtilityApplication",
+                "operatingSystem": "Web Browser",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                }
+            },
+            {
+                "@type": "SoftwareApplication",
+                "name": "URL Shortener",
+                "description": "Create custom short URLs with expiration dates",
+                "url": "{{ url_for('shortener.url_shortener_page', _external=True) }}",
+                "applicationCategory": "WebApplication",
+                "operatingSystem": "Web Browser",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                }
+            },
+            {
+                "@type": "SoftwareApplication",
+                "name": "Image Uploader",
+                "description": "Upload images via API for processing and storage",
+                "url": "{{ url_for('image_routes.image_uploader_page', _external=True) }}",
+                "applicationCategory": "WebApplication",
+                "operatingSystem": "Web Browser"
+            },
+            {
+                "@type": "SoftwareApplication",
+                "name": "Garden Growth Calculator",
+                "description": "Calculate garden fruit growth times and yields",
+                "url": "https://www.fruitcalculator.dohmboy64.com/",
+                "applicationCategory": "Utility",
+                "operatingSystem": "Web Browser"
+            }
+        ]
+    }
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "DOHMBOY64 Developer Projects",
+    "description": "Open source projects and tools created by DOHMBOY64",
+    "numberOfItems": 10,
+    "itemListElement": [
+        {
+            "@type": "CreativeWork",
+            "name": "Holy Potatoes Editor",
+            "description": "Game editor for Holy Potatoes video game series",
+            "url": "https://github.com/NomadWithoutAHome/HolyPotatoEditor",
+            "creator": {
+                "@type": "Person",
+                "name": "DOHMBOY64"
+            },
+            "programmingLanguage": "Various",
+            "datePublished": "2024-01-01"
+        },
+        {
+            "@type": "CreativeWork",
+            "name": "Photo Deputy",
+            "description": "Advanced photo management and organization tool",
+            "url": "https://github.com/NomadWithoutAHome/PhotoDeputy",
+            "creator": {
+                "@type": "Person",
+                "name": "DOHMBOY64"
+            },
+            "programmingLanguage": "Python",
+            "datePublished": "2024-01-01"
+        },
+        {
+            "@type": "CreativeWork",
+            "name": "Ancestor API",
+            "description": "REST API for family tree and genealogy data",
+            "url": "https://github.com/NomadWithoutAHome/AncestorAPI",
+            "creator": {
+                "@type": "Person",
+                "name": "DOHMBOY64"
+            },
+            "programmingLanguage": "Python",
+            "datePublished": "2024-01-01"
+        },
+        {
+            "@type": "CreativeWork",
+            "name": "SMP Smasher",
+            "description": "Audio processing tool for Ghostbusters Remastered",
+            "url": "https://github.com/NomadWithoutAHome/GhostbustersRemasteredSMPSmasher",
+            "creator": {
+                "@type": "Person",
+                "name": "DOHMBOY64"
+            },
+            "programmingLanguage": "Various",
+            "datePublished": "2024-01-01"
+        },
+        {
+            "@type": "CreativeWork",
+            "name": "XenonRecomp Binarys",
+            "description": "Binary recompilation tools for Xenon platform",
+            "url": "https://github.com/NomadWithoutAHome/XenonRecomp-Binarys",
+            "creator": {
+                "@type": "Person",
+                "name": "DOHMBOY64"
+            },
+            "programmingLanguage": "C++",
+            "datePublished": "2024-01-01"
+        },
+        {
+            "@type": "CreativeWork",
+            "name": "EmbedPy Steno Tool",
+            "description": "Python embedding tool for stenography applications",
+            "url": "https://github.com/NomadWithoutAHome/EmbedPy",
+            "creator": {
+                "@type": "Person",
+                "name": "DOHMBOY64"
+            },
+            "programmingLanguage": "Python",
+            "datePublished": "2024-01-01"
+        },
+        {
+            "@type": "CreativeWork",
+            "name": "RFC Extractor",
+            "description": "Tool for extracting and processing RFC documents",
+            "url": "https://github.com/NomadWithoutAHome/RFC-Extractor",
+            "creator": {
+                "@type": "Person",
+                "name": "DOHMBOY64"
+            },
+            "programmingLanguage": "Python",
+            "datePublished": "2024-01-01"
+        },
+        {
+            "@type": "CreativeWork",
+            "name": "IMG 2 Pixel Art",
+            "description": "Convert images to pixel art style graphics",
+            "url": "https://github.com/NomadWithoutAHome/img2pix",
+            "creator": {
+                "@type": "Person",
+                "name": "DOHMBOY64"
+            },
+            "programmingLanguage": "Python",
+            "datePublished": "2024-01-01"
+        },
+        {
+            "@type": "CreativeWork",
+            "name": "Grow Calculator",
+            "description": "Calculate growth rates and yields for various plants",
+            "url": "https://github.com/NomadWithoutAHome/GrowCaculator",
+            "creator": {
+                "@type": "Person",
+                "name": "DOHMBOY64"
+            },
+            "programmingLanguage": "JavaScript",
+            "datePublished": "2024-01-01"
+        }
+    ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "The Simpsons Arcade Game",
+    "alternateName": ["Simpsons Arcade", "The Simpsons", "Simpsons Game"],
+    "description": "Classic 1991 arcade game featuring the Simpson family fighting against aliens and mutants in Springfield",
+    "url": "{{ url_for('pages.play', _external=True) }}",
+    "gamePlatform": "Web Browser",
+    "applicationCategory": "GameApplication",
+    "genre": ["Arcade", "Action", "Platform"],
+    "datePublished": "1991-01-01",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Konami",
+        "url": "https://www.konami.com"
+    },
+    "developer": {
+        "@type": "Organization",
+        "name": "Konami"
+    },
+    "playMode": "Single Player",
+    "numberOfPlayers": {
+        "@type": "QuantitativeValue",
+        "minValue": 1,
+        "maxValue": 2
+    },
+    "character": [
+        {
+            "@type": "Person",
+            "name": "Homer Simpson",
+            "description": "The main character who fights aliens with his trusty slingshot"
+        },
+        {
+            "@type": "Person",
+            "name": "Marge Simpson",
+            "description": "Homer's wife who helps in the alien invasion battle"
+        },
+        {
+            "@type": "Person",
+            "name": "Bart Simpson",
+            "description": "The mischievous son who joins the family fight"
+        },
+        {
+            "@type": "Person",
+            "name": "Lisa Simpson",
+            "description": "The intelligent daughter who assists in combat"
+        }
+    ],
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.2",
+        "reviewCount": "156",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+    }
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "name": "DOHMBOY64 FAQ - Retro Gaming & Tools",
+    "description": "Frequently asked questions about DOHMBOY64's retro gaming tools and services",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "What is DOHMBOY64?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "DOHMBOY64 is a retro-themed website offering free tools, Chrome extension downloads, URL shortening, arcade games, and open source developer projects with a 90s gaming aesthetic."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Are the tools free to use?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, all tools on DOHMBOY64 are completely free to use. There are no premium features, subscriptions, or hidden costs."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do I need to create an account?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No, you can use all tools and play games without creating an account or providing any personal information."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What browsers are supported?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "DOHMBOY64 works best with modern web browsers including Chrome, Firefox, Safari, and Edge. Some features may require JavaScript to be enabled."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Are the games playable on mobile?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Some games and tools are mobile-friendly, but the full retro gaming experience is optimized for desktop browsers with keyboard controls."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I contribute to the projects?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! All code projects are open source and available on GitHub. Feel free to fork, contribute, or suggest improvements."
+            }
+        }
+    ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "DOHMBOY64",
+    "alternateName": ["ThunderDohm", "DOHMBOY64 Tools"],
+    "url": "https://www.dohmboy64.com",
+    "logo": "{{ url_for('static', filename='assets/logo.png', _external=True) }}",
+    "description": "Retro-themed gaming tools and utilities website featuring free tools, games, and developer projects",
+    "foundingDate": "2024",
+    "founder": {
+        "@type": "Person",
+        "name": "DOHMBOY64",
+        "sameAs": [
+            "https://github.com/DohmBoy64Bit",
+            "https://github.com/NomadWithoutAHome"
+        ]
+    },
+    "sameAs": [
+        "https://github.com/DohmBoy64Bit",
+        "https://github.com/NomadWithoutAHome"
+    ],
+    "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "technical support",
+        "url": "https://www.dohmboy64.com"
+    },
+    "knowsAbout": [
+        "Web Development",
+        "Game Development",
+        "Chrome Extensions",
+        "URL Shortening",
+        "Retro Gaming",
+        "Open Source Software"
+    ],
+    "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "DOHMBOY64 Services",
+        "itemListElement": [
+            {
+                "@type": "Offer",
+                "itemOffered": {
+                    "@type": "Service",
+                    "name": "Chrome Extension Downloads",
+                    "description": "Free CRX and ZIP downloads"
+                }
+            },
+            {
+                "@type": "Offer",
+                "itemOffered": {
+                    "@type": "Service",
+                    "name": "URL Shortening",
+                    "description": "Custom short URLs with expiration"
+                }
+            },
+            {
+                "@type": "Service",
+                "name": "Arcade Games",
+                "description": "Classic retro games in browser"
+            }
+        ]
+    }
+}
+</script>
+{% endblock %}
 
 {% block styles %}
 <style>

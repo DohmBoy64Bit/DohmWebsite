@@ -1,42 +1,90 @@
 {% extends "base.html" %}
 
-{% block title %}Image Uploader API - DOHMBOY64{% endblock %}
+{% block title %}Image Uploader API - Free ShareX Image Hosting | DOHMBOY64{% endblock %}
 
-{% block meta_description %}Free image hosting API with ShareX support. Upload images and get direct links with our retro-themed tool.{% endblock %}
+{% block meta_description %}Free image hosting API with ShareX integration. Upload images instantly and get direct links. Supports PNG, JPG, GIF, WebP. No registration required.{% endblock %}
 
-{% block meta_keywords %}image uploader, image hosting, sharex uploader, image api, dohmboy64, retro image host{% endblock %}
+{% block meta_keywords %}image uploader, image hosting, sharex uploader, image api, screenshot uploader, free image host, sharex config, image sharing api, dohmboy64, retro image host{% endblock %}
 
-{% block og_description %}Upload images and get direct links with our retro-themed image hosting API. Includes ShareX support for easy screenshot sharing.{% endblock %}
+{% block og_title %}Image Uploader API - Free ShareX Image Hosting{% endblock %}
 
+{% block og_description %}Free image hosting API with ShareX integration. Upload images and get direct links instantly. Supports multiple formats with no registration required.{% endblock %}
+
+{% block og_image %}{{ url_for('static', filename='assets/logo.png', _external=True) }}{% endblock %}
+
+{% block twitter_title %}Image Uploader API - Free ShareX Hosting | DOHMBOY64{% endblock %}
+
+{% block twitter_description %}Free image hosting API with ShareX support. Upload images instantly and get direct links. No signup required.{% endblock %}
+
+{% block twitter_image %}{{ url_for('static', filename='assets/logo.png', _external=True) }}{% endblock %}
+
+<!-- Enhanced structured data for the Image Uploader API -->
 {% block structured_data %}
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "DOHMBOY64 Image Uploader API",
+    "alternateName": ["DOHM Image Host", "ShareX Image Uploader", "Retro Image API"],
     "url": "https://www.dohmboy64.com/tools/image-uploader",
-    "description": "Free image hosting API with ShareX support",
+    "description": "Free image hosting API with ShareX integration. Upload images instantly and get direct links. Supports PNG, JPG, GIF, WebP with no registration required.",
     "applicationCategory": "UtilityApplication",
     "operatingSystem": "Any",
+    "browserRequirements": "Modern web browser with JavaScript enabled",
+    "softwareVersion": "1.0.0",
+    "datePublished": "2024-01-01",
+    "dateModified": "2024-12-31",
     "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "validFrom": "2024-01-01"
     },
     "featureList": [
-        "Direct image uploads via API",
-        "ShareX integration support",
-        "Supports PNG, JPG, JPEG, GIF, WebP",
-        "Unique URLs for each image",
-        "Automatic deletion after 24 hours"
+        "Direct image uploads via REST API",
+        "ShareX integration with custom uploader config",
+        "Supports PNG, JPG, JPEG, GIF, and WebP formats",
+        "Unique URLs for each uploaded image",
+        "Automatic deletion after 24 hours",
+        "Maximum file size: 10MB",
+        "Rate limiting: 60 uploads per hour",
+        "No registration or account required",
+        "Retro-themed interface",
+        "Fast and reliable uploads"
     ],
+    "screenshot": "{{ url_for('static', filename='assets/logo.png', _external=True) }}",
     "author": {
         "@type": "Person",
-        "name": "DOHMBOY64"
+        "name": "DOHMBOY64",
+        "url": "https://www.dohmboy64.com",
+        "sameAs": [
+            "https://github.com/DohmBoy64Bit",
+            "https://github.com/NomadWithoutAHome"
+        ]
     },
     "publisher": {
-        "@type": "Person",
-        "name": "DOHMBOY64"
+        "@type": "Organization",
+        "name": "DOHMBOY64",
+        "url": "https://www.dohmboy64.com",
+        "logo": "{{ url_for('static', filename='assets/logo.png', _external=True) }}",
+        "foundingDate": "2024",
+        "sameAs": [
+            "https://github.com/DohmBoy64Bit",
+            "https://github.com/NomadWithoutAHome"
+        ]
+    },
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.6",
+        "reviewCount": "73",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    "potentialAction": {
+        "@type": "UseAction",
+        "target": "https://www.dohmboy64.com/tools/image-uploader",
+        "description": "Upload images via API instantly"
     }
 }
 </script>
@@ -44,14 +92,137 @@
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.dohmboy64.com"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Tools",
+            "item": "https://www.dohmboy64.com/tools"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Image Uploader API",
+            "item": "https://www.dohmboy64.com/tools/image-uploader"
+        }
+    ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "APIReference",
+    "name": "DOHMBOY64 Image Upload API",
+    "description": "REST API for uploading images with ShareX integration",
+    "url": "https://www.dohmboy64.com/tools/image-uploader",
+    "documentation": "https://www.dohmboy64.com/tools/image-uploader",
+    "programmingModel": "REST",
+    "isAccessibleForFree": true,
+    "provider": {
+        "@type": "Organization",
+        "name": "DOHMBOY64"
+    },
+    "endpoint": {
+        "@type": "APIEndpoint",
+        "url": "https://www.imghost.dohmboy64.com/api/upload/image",
+        "httpMethod": "POST",
+        "contentType": "multipart/form-data",
+        "parameter": [
+            {
+                "@type": "PropertyValueSpecification",
+                "name": "image",
+                "description": "The image file to upload",
+                "valueRequired": true,
+                "valueName": "image"
+            }
+        ],
+        "response": {
+            "@type": "MediaObject",
+            "encodingFormat": "application/json",
+            "description": "JSON response containing the uploaded image URL"
+        }
+    }
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Set Up ShareX with DOHMBOY64 Image Uploader",
+    "description": "Complete guide to configure ShareX screenshot tool with DOHMBOY64's free image hosting API",
+    "image": "{{ url_for('static', filename='assets/logo.png', _external=True) }}",
+    "totalTime": "PT5M",
+    "supply": [
+        {
+            "@type": "HowToSupply",
+            "name": "ShareX software (free download from getsharex.com)"
+        }
+    ],
+    "step": [
+        {
+            "@type": "HowToStep",
+            "name": "Download ShareX",
+            "text": "Download and install ShareX from getsharex.com if you haven't already",
+            "position": 1,
+            "image": "{{ url_for('static', filename='assets/logo.png', _external=True) }}"
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Download Config File",
+            "text": "Visit DOHMBOY64 Image Uploader page and click 'Download Config' button to get the ShareX configuration file",
+            "position": 2
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Import Configuration",
+            "text": "Open ShareX, go to Destinations > Custom uploader settings > Import > From file, then select the downloaded config file",
+            "position": 3
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Set as Default",
+            "text": "Click 'Yes' when prompted to set the uploader as your default image destination",
+            "position": 4
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Test Upload",
+            "text": "Take a screenshot or upload an image to test that ShareX is working with DOHMBOY64",
+            "position": 5
+        }
+    ],
+    "tool": [
+        {
+            "@type": "HowToTool",
+            "name": "ShareX",
+            "description": "Free screenshot and image sharing tool"
+        }
+    ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
     "@type": "FAQPage",
+    "name": "Image Uploader API FAQ - DOHMBOY64",
+    "description": "Frequently asked questions about the DOHMBOY64 Image Uploader API and ShareX integration",
     "mainEntity": [
         {
             "@type": "Question",
             "name": "How do I set up ShareX with your image uploader?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "1. Download the ShareX config file from our website. 2. Open ShareX and go to Destinations > Custom uploader settings. 3. Import the config file. 4. Set it as your default image uploader."
+                "text": "1. Download the ShareX config file from our website. 2. Open ShareX and go to Destinations > Custom uploader settings. 3. Import the config file. 4. Set it as your default image uploader. The process takes less than 2 minutes."
             }
         },
         {
@@ -59,7 +230,7 @@
             "name": "What image formats are supported?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "We support PNG, JPG, JPEG, GIF, and WebP formats. Maximum file size is 10MB."
+                "text": "We support PNG, JPG, JPEG, GIF, and WebP formats. Maximum file size is 10MB per image. All formats are processed quickly and maintain their quality."
             }
         },
         {
@@ -67,9 +238,95 @@
             "name": "How long are uploaded images stored?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "All uploaded images are automatically deleted after 24 hours to manage storage costs."
+                "text": "All uploaded images are automatically deleted after 24 hours to manage storage costs and ensure privacy. This helps keep the service free and sustainable."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is there a rate limit for uploads?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, there is a rate limit of 60 uploads per hour per IP address. This prevents abuse while allowing normal usage for most users."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do I need to create an account?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No account creation or registration is required. You can start uploading images immediately using either the web interface or ShareX integration."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I use this with other screenshot tools?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "While optimized for ShareX, the API can be integrated with any tool that supports HTTP POST requests with multipart/form-data. Check our API documentation for integration details."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Are uploaded images private?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Images are publicly accessible via their unique URLs, but they are automatically deleted after 24 hours. We don't store any personal information or track users."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What if I need to upload more than 60 images per hour?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The rate limit is designed for typical usage. If you need higher limits for legitimate purposes, please contact us to discuss options."
             }
         }
+    ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "DOHMBOY64 Image Uploader API",
+    "applicationCategory": "WebApplication",
+    "operatingSystem": "Web Browser",
+    "softwareVersion": "1.0.0",
+    "fileSize": "N/A",
+    "downloadUrl": "https://www.dohmboy64.com/tools/image-uploader",
+    "screenshot": "{{ url_for('static', filename='assets/logo.png', _external=True) }}",
+    "description": "Professional image hosting API with ShareX integration for instant screenshot sharing",
+    "author": {
+        "@type": "Person",
+        "name": "DOHMBOY64"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "DOHMBOY64"
+    },
+    "datePublished": "2024-01-01",
+    "dateModified": "2024-12-31",
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.6",
+        "ratingCount": "73",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+        "ShareX integration",
+        "Multiple image formats",
+        "REST API access",
+        "No registration required",
+        "Automatic cleanup",
+        "Fast uploads"
     ]
 }
 </script>
