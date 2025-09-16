@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Save File Converter - Edit Game Save Files | DOHMBOY64{% endblock %}
-
-{% block meta_description %}Free save file converter and editor for game files. Edit, decrypt, and modify save data, WSRef files, and WSDir configurations. Supports multiple game formats with JSON export functionality.{% endblock %}
-
-{% block meta_keywords %}save file converter, game save editor, wsref editor, wsdir editor, save file decrypt, game save files, file converter, dohmboy64{% endblock %}
+{% block title %}Save Converter - DOHMBDY64{% endblock %}
 
 {% block styles %}
 <style>
@@ -170,41 +166,15 @@
 
         <!-- Help Section -->
         <div class="bg-gray-800 p-6 rounded-lg border-2 border-orange-500 shadow-lg">
-            <h2 class="text-2xl mb-4 font-vt323">Help & Features</h2>
+            <h2 class="text-2xl mb-4 font-vt323">Help</h2>
             <div class="space-y-4 text-gray-300">
                 <p>This tool allows you to:</p>
                 <ol class="list-decimal list-inside space-y-2 ml-4">
-                    <li>Upload and decrypt save files from various games</li>
+                    <li>Upload and decrypt save files</li>
                     <li>View and edit save data, WSRef data, or WSDir data</li>
-                    <li>Download the modified files back to your device</li>
-                    <li>Export the data as JSON for further analysis</li>
+                    <li>Download the modified files</li>
+                    <li>Export the data as JSON</li>
                 </ol>
-
-                <div class="mt-6">
-                    <h3 class="text-xl font-vt323 text-orange-500 mb-2">Supported File Types:</h3>
-                    <ul class="list-disc list-inside space-y-1 ml-4">
-                        <li><strong>Save Files (.txt):</strong> Game save data files that can be edited and modified</li>
-                        <li><strong>WSRef Files (.assets):</strong> Game reference data for exploring game assets</li>
-                        <li><strong>WSDir Files (.txt):</strong> Directory configuration files for game settings</li>
-                    </ul>
-                </div>
-
-                <div class="mt-6">
-                    <h3 class="text-xl font-vt323 text-orange-500 mb-2">How to Use:</h3>
-                    <ol class="list-decimal list-inside space-y-2 ml-4">
-                        <li>Select the appropriate tab for your file type</li>
-                        <li>Click "Browse Files" to select your file</li>
-                        <li>Click "Load" to process and display the data</li>
-                        <li>Edit the data in the JSON editor if needed</li>
-                        <li>Save changes or export as JSON</li>
-                    </ol>
-                </div>
-
-                <div class="mt-6 p-4 bg-gray-700 rounded border border-orange-600">
-                    <p class="text-yellow-400 font-vt323 text-sm">
-                        ⚠️ WARNING: Always backup your original files before making changes. Modified save files may affect game compatibility.
-                    </p>
-                </div>
             </div>
         </div>
     </div>
@@ -303,4 +273,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script src="{{ url_for('static', filename='js/converter.js') }}"></script>
-{% endblock %}
+{% endblock %} 

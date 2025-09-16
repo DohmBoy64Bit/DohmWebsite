@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free document converter tool for converting PDF to DOCX and DOCX to PDF. Fast, secure file conversion with retro terminal interface. No registration required.">
-    <meta name="keywords" content="pdf converter, docx converter, document converter, pdf to docx, docx to pdf, file converter, free converter, dohmboy64">
-    <meta name="author" content="DOHMBOY64">
-    <meta name="robots" content="index, follow">
-    <title>DocToPDF - Free Document Converter | DOHMBOY64</title>
+    <title>DocToPDF - Document Converter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
@@ -71,102 +67,39 @@
             <p class="text-2xl text-green-400">Document Conversion Terminal</p>
         </header>
 
-        <main class="max-w-4xl mx-auto">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Main Converter -->
-                <div class="bg-gray-900 p-8 rounded-lg border-2 border-green-500 shadow-lg shadow-green-500/20">
-                    <h2 class="text-2xl mb-6 text-center text-green-400 terminal-font">CONVERSION TERMINAL</h2>
-                    <form id="uploadForm" class="space-y-6">
-                        <div class="space-y-2">
-                            <label class="block text-xl">SELECT FILE TO CONVERT</label>
-                            <input type="file"
-                                   id="fileInput"
-                                   name="file"
-                                   class="w-full p-2 bg-black border-2 border-green-500 rounded text-green-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-green-500 file:bg-green-900 file:hover:bg-green-800 cursor-pointer"
-                                   accept=".pdf,.docx">
-                            <div id="fileInfo" class="text-sm text-green-400 mt-2 hidden"></div>
-                        </div>
-
-                        <div class="space-y-2">
-                            <label class="block text-xl">TARGET FORMAT</label>
-                            <select name="target_format"
-                                    id="targetFormat"
-                                    class="w-full p-2 bg-black border-2 border-green-500 rounded text-green-500">
-                                <option value="pdf">PDF</option>
-                                <option value="docx">DOCX</option>
-                            </select>
-                            <div id="conversionInfo" class="text-sm text-green-400 mt-2 hidden"></div>
-                        </div>
-
-                        <button type="submit"
-                                id="convertButton"
-                                class="w-full py-3 px-6 bg-green-900 hover:bg-green-800 text-green-500 border-2 border-green-500 rounded-lg transition-colors duration-200">
-                            INITIATE CONVERSION
-                        </button>
-                    </form>
-
-                    <div id="status" class="mt-6 text-center hidden">
-                        <div class="animate-pulse text-green-400">PROCESSING...</div>
-                    </div>
-                </div>
-
-                <!-- Features & Info -->
-                <div class="space-y-6">
-                    <div class="bg-gray-900 p-6 rounded-lg border-2 border-green-500 shadow-lg shadow-green-500/20">
-                        <h3 class="text-xl mb-4 text-green-400 terminal-font">SUPPORTED FORMATS</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center space-x-3">
-                                <span class="text-green-500 text-xl">📄</span>
-                                <div>
-                                    <div class="text-green-400 font-bold">PDF Files</div>
-                                    <div class="text-green-300 text-sm">Portable Document Format</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="text-green-500 text-xl">📝</span>
-                                <div>
-                                    <div class="text-green-400 font-bold">DOCX Files</div>
-                                    <div class="text-green-300 text-sm">Microsoft Word Documents</div>
-                                </div>
-                            </div>
-                        </div>
+        <main class="max-w-2xl mx-auto">
+            <div class="bg-gray-900 p-8 rounded-lg border-2 border-green-500 shadow-lg shadow-green-500/20">
+                <form id="uploadForm" class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="block text-xl">SELECT FILE TO CONVERT</label>
+                        <input type="file" 
+                               id="fileInput"
+                               name="file" 
+                               class="w-full p-2 bg-black border-2 border-green-500 rounded text-green-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-green-500 file:bg-green-900 file:hover:bg-green-800 cursor-pointer"
+                               accept=".pdf,.docx">
+                        <div id="fileInfo" class="text-sm text-green-400 mt-2 hidden"></div>
                     </div>
 
-                    <div class="bg-gray-900 p-6 rounded-lg border-2 border-green-500 shadow-lg shadow-green-500/20">
-                        <h3 class="text-xl mb-4 text-green-400 terminal-font">FEATURES</h3>
-                        <ul class="space-y-2 text-green-300">
-                            <li class="flex items-center space-x-2">
-                                <span class="text-green-500">✓</span>
-                                <span>Fast and secure conversion</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <span class="text-green-500">✓</span>
-                                <span>No registration required</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <span class="text-green-500">✓</span>
-                                <span>Preserves document formatting</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <span class="text-green-500">✓</span>
-                                <span>Retro terminal interface</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <span class="text-green-500">✓</span>
-                                <span>Free to use</span>
-                            </li>
-                        </ul>
+                    <div class="space-y-2">
+                        <label class="block text-xl">TARGET FORMAT</label>
+                        <select name="target_format" 
+                                id="targetFormat"
+                                class="w-full p-2 bg-black border-2 border-green-500 rounded text-green-500">
+                            <option value="pdf">PDF</option>
+                            <option value="docx">DOCX</option>
+                        </select>
+                        <div id="conversionInfo" class="text-sm text-green-400 mt-2 hidden"></div>
                     </div>
 
-                    <div class="bg-gray-900 p-6 rounded-lg border-2 border-yellow-500 shadow-lg shadow-yellow-500/20">
-                        <h3 class="text-xl mb-4 text-yellow-400 terminal-font">USAGE TIPS</h3>
-                        <div class="space-y-3 text-yellow-300 text-sm">
-                            <p>• Maximum file size: 10MB</p>
-                            <p>• Supported formats: PDF ↔ DOCX</p>
-                            <p>• Files are processed securely</p>
-                            <p>• Download starts automatically</p>
-                        </div>
-                    </div>
+                    <button type="submit" 
+                            id="convertButton"
+                            class="w-full py-3 px-6 bg-green-900 hover:bg-green-800 text-green-500 border-2 border-green-500 rounded-lg transition-colors duration-200">
+                        INITIATE CONVERSION
+                    </button>
+                </form>
+
+                <div id="status" class="mt-6 text-center hidden">
+                    <div class="animate-pulse text-green-400">PROCESSING...</div>
                 </div>
             </div>
         </main>
@@ -262,4 +195,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
