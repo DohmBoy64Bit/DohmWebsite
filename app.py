@@ -2,13 +2,10 @@ from flask import Flask, send_from_directory
 from utils.logging_config import app_logger as logger, set_debug_level
 from routes.page_routes import pages
 from routes.crx_routes import crx
-#from routes.bbs_routes import bbs
 from routes.shortener_routes import shortener
 from routes.image_routes import image_routes
-#from routes.pdf_converter_routes import pdf_converter
 import mimetypes
 from asgiref.wsgi import WsgiToAsgi
-# from routes.converter_routes import converter
 
 # Add proper MIME types
 mimetypes.add_type('application/javascript', '.js')
@@ -35,4 +32,4 @@ def serve_static(filename):
 asgi_app = WsgiToAsgi(app)
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True)
