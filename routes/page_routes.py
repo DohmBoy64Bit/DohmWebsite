@@ -56,6 +56,11 @@ def chrome_downloader():
     """Render the Chrome Extension Downloader page."""
     return render_template('tools.html')
 
+@pages.route('/tools/avatar-cropper')
+def avatar_cropper():
+    """Render the Avatar Cropper page."""
+    return render_template('avatar_cropper.html')
+
 @pages.route('/play')
 def play():
     """Render the emulator page."""
@@ -97,4 +102,4 @@ def track_outbound():
 
 @pages.before_request
 def track_page_visit():
-    TrackingService.track_visitor(request, request.path) 
+    TrackingService.track_visitor(request, request.path)

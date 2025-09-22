@@ -100,6 +100,19 @@
             },
             {
                 "@type": "SoftwareApplication",
+                "name": "Avatar Cropper",
+                "description": "Retro-styled avatar cropping tool with Discord integration, pride borders, and real-time previews",
+                "url": "{{ url_for('pages.avatar_cropper', _external=True) }}",
+                "applicationCategory": "WebApplication",
+                "operatingSystem": "Web Browser",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                }
+            },
+            {
+                "@type": "SoftwareApplication",
                 "name": "Garden Growth Calculator",
                 "description": "Calculate garden fruit growth times and yields",
                 "url": "https://www.fruitcalculator.dohmboy64.com/",
@@ -561,6 +574,7 @@
             <a href="{{ url_for('pages.chrome_downloader') }}" class="dropdown-item" title="Download Chrome Extensions">Chrome Extension Downloader</a>
             <a href="{{ url_for('shortener.url_shortener_page') }}" class="dropdown-item" title="Create Short URLs">URL Shortener</a>
             <a href="{{ url_for('image_routes.image_uploader_page') }}" class="dropdown-item" title="Upload Images via API">Image Uploader</a>
+            <a href="{{ url_for('pages.avatar_cropper') }}" class="dropdown-item" title="Create Retro Avatars">Avatar Cropper</a>
             <a href="#" class="dropdown-item">More Tools Coming Soon...</a>
         </div>
     </div>
