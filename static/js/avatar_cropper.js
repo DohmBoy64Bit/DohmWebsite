@@ -577,14 +577,16 @@ class RetroAvatarCropper {
     drawBorder() {
         const centerX = this.cropArea.x + this.cropArea.width / 2;
         const centerY = this.cropArea.y + this.cropArea.height / 2;
-        const radius = (this.cropArea.width / 2) * (1 + this.borderSize);
+        const cropRadius = this.cropArea.width / 2;
 
         if (this.borderType === 'solid') {
-            this.ctx.strokeStyle = this.borderColor;
-            this.ctx.lineWidth = this.cropArea.width * this.borderSize;
+            // Draw border inward - create a ring from crop edge inward
+            const borderRadius = cropRadius * (1 - this.borderSize);
+            this.ctx.fillStyle = this.borderColor;
             this.ctx.beginPath();
-            this.ctx.arc(centerX, centerY, this.cropArea.width / 2, 0, 2 * Math.PI);
-            this.ctx.stroke();
+            this.ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
+            this.ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
+            this.ctx.fill();
         } else if (this.borderType === 'custom' && this.customGradient) {
             this.drawCustomGradientBorder();
         } else if (this.borderType.startsWith('lgbt') || this.borderType.startsWith('trans') || this.borderType.startsWith('nonbinary')) {
@@ -595,15 +597,15 @@ class RetroAvatarCropper {
     drawCustomGradientBorder() {
         const centerX = this.cropArea.x + this.cropArea.width / 2;
         const centerY = this.cropArea.y + this.cropArea.height / 2;
-        const innerRadius = this.cropArea.width / 2;
-        const outerRadius = innerRadius * (1 + this.borderSize);
+        const cropRadius = this.cropArea.width / 2;
+        const borderRadius = cropRadius * (1 - this.borderSize);
         const rings = Math.max(6, this.customGradient.gradient.length);
 
-        // Create gradient for each ring
+        // Create gradient for each ring (expanding inward)
         for (let i = 0; i < rings; i++) {
             const ratio = i / rings;
-            const ringInner = innerRadius + (outerRadius - innerRadius) * ratio;
-            const ringOuter = innerRadius + (outerRadius - innerRadius) * (ratio + 1/rings);
+            const ringOuter = cropRadius - (cropRadius - borderRadius) * ratio;
+            const ringInner = cropRadius - (cropRadius - borderRadius) * (ratio + 1/rings);
 
             // Create radial gradient for this ring
             const gradient = this.ctx.createRadialGradient(centerX, centerY, ringInner, centerX, centerY, ringOuter);
@@ -624,8 +626,8 @@ class RetroAvatarCropper {
     drawPrideBorder() {
         const centerX = this.cropArea.x + this.cropArea.width / 2;
         const centerY = this.cropArea.y + this.cropArea.height / 2;
-        const innerRadius = this.cropArea.width / 2;
-        const outerRadius = innerRadius * (1 + this.borderSize);
+        const cropRadius = this.cropArea.width / 2;
+        const borderRadius = cropRadius * (1 - this.borderSize);
         const rings = 6;
 
         const borderColors = {
@@ -635,10 +637,11 @@ class RetroAvatarCropper {
 
         const colors = borderColors[this.borderType] || borderColors['retro'];
 
+        // Draw rings expanding inward
         for (let i = 0; i < rings; i++) {
             const ratio = i / rings;
-            const ringInner = innerRadius + (outerRadius - innerRadius) * ratio;
-            const ringOuter = innerRadius + (outerRadius - innerRadius) * (ratio + 1/rings);
+            const ringOuter = cropRadius - (cropRadius - borderRadius) * ratio;
+            const ringInner = cropRadius - (cropRadius - borderRadius) * (ratio + 1/rings);
 
             this.ctx.beginPath();
             this.ctx.arc(centerX, centerY, ringOuter, 0, 2 * Math.PI);
