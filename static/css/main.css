@@ -4,6 +4,29 @@ body {
     font-size: 1.2rem;
 }
 
+/* Global retro scrollbar styling (applies to all pages) */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #f4511e #1a1a1a; /* Firefox */
+}
+
+/* WebKit */
+html::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+html::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border: 2px solid #f97316;
+}
+html::-webkit-scrollbar-thumb {
+    background: #f4511e;
+    border: 2px solid #fb8c00;
+}
+html::-webkit-scrollbar-thumb:hover {
+    background: #fb8c00;
+}
+
 .retro-container {
     background: linear-gradient(45deg, #1a1a1a 25%, #2a2a2a 25%, #2a2a2a 50%, #1a1a1a 50%, #1a1a1a 75%, #2a2a2a 75%, #2a2a2a);
     background-size: 10px 10px;

@@ -294,7 +294,7 @@
         justify-content: center;
         gap: 1rem;
         flex-wrap: wrap;
-        margin-top: 1rem;
+        margin-top: 0.5rem;
         align-items: flex-end; /* bottom align for tidy row */
     }
 
@@ -337,25 +337,23 @@
     </div>
 
     <!-- Main Cropper Interface -->
-    <div class="cropper-terminal mb-8">
+    <div class="cropper-terminal mb-4">
         <div class="terminal-header">
             > AVATAR CROPPER v1.0 - INSERT IMAGE TO BEGIN
         </div>
 
-        <!-- File Upload Area -->
-        <div class="text-center mb-6">
-            <label for="image-upload" class="retro-button inline-block cursor-pointer">
-                SELECT IMAGE FILE
-                <input type="file" id="image-upload" accept="image/*" class="hidden">
-            </label>
-            <p class="text-gray-400 text-sm mt-2">or drag & drop your image here</p>
-        </div>
+        <!-- File Upload Prompt (centered in canvas until image selected) -->
 
         <!-- Cropper Canvas Area -->
         <div class="flex flex-col lg:flex-row gap-3">
             <!-- Main Canvas -->
             <div class="flex-1">
                 <div id="cropper-canvas" class="cropper-canvas relative bg-black border-2 border-orange-500 rounded-lg overflow-hidden">
+                    <div id="upload-prompt" class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+                        <label for="image-upload" class="retro-button inline-block cursor-pointer mb-2">SELECT IMAGE FILE</label>
+                        <input type="file" id="image-upload" accept="image/*" class="hidden">
+                        <p class="text-gray-400 text-sm">or drag & drop your image here</p>
+                    </div>
                     <canvas id="main-canvas" class="w-full h-full"></canvas>
                     <div id="drop-overlay" class="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center text-white text-xl opacity-0 transition-opacity duration-300 pointer-events-none">
                         DROP IMAGE HERE
@@ -433,8 +431,8 @@
         </div>
     </div>
 
-    <!-- Preview Section -->
-    <div class="cropper-terminal">
+    <!-- Preview Section (hidden until image selected) -->
+    <div id="preview-section" class="cropper-terminal mt-2" style="display:none;">
         <div class="terminal-header">
             > PREVIEW SIZES - REAL-TIME RENDERING
         </div>

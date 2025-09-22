@@ -370,7 +370,15 @@
         background: #1a1a1a;
         border: 2px solid #ff8c00;
         border-radius: 5px;
+        max-height: 50vh;
+        overflow: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #f4511e #1a1a1a;
     }
+    .options-container::-webkit-scrollbar { width: 12px; }
+    .options-container::-webkit-scrollbar-track { background: #1a1a1a; border: 2px solid #f97316; }
+    .options-container::-webkit-scrollbar-thumb { background: #f4511e; border: 2px solid #fb8c00; }
+    .options-container::-webkit-scrollbar-thumb:hover { background: #fb8c00; }
 
     .option-toggle {
         display: flex;

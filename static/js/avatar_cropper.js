@@ -193,6 +193,27 @@ class RetroAvatarCropper {
         this.ctx = this.canvas.getContext('2d');
         this.ctx.imageSmoothingEnabled = true;
         this.ctx.imageSmoothingQuality = 'high';
+
+        // If no image loaded yet, keep prompt visible and preview hidden
+        const hasImage = !!this.image;
+        const prompt = document.getElementById('upload-prompt');
+        const preview = document.getElementById('preview-section');
+        if (!hasImage) {
+            if (prompt) prompt.style.display = '';
+            if (preview) preview.style.display = 'none';
+        }
+
+        // Observe container size changes to keep canvas in sync without requiring window resize
+        try {
+            if (!this._resizeObserver) {
+                this._resizeObserver = new ResizeObserver(() => {
+                    this.handleResize();
+                });
+                this._resizeObserver.observe(canvasContainer);
+            }
+        } catch (e) {
+            // ResizeObserver may not be available; window resize fallback already registered
+        }
     }
 
     setupEventListeners() {
@@ -287,8 +308,24 @@ class RetroAvatarCropper {
             const img = new Image();
             img.onload = () => {
                 this.image = img;
+                const prompt = document.getElementById('upload-prompt');
+                if (prompt) prompt.style.display = 'none';
+                const preview = document.getElementById('preview-section');
+                if (preview) preview.style.display = '';
+                // Ensure the canvas size is correct before computing zoom/crop
+                this.handleResize();
+                // Fit image exactly to the canvas bounds
                 this.fitToScreen();
-                this.centerCrop();
+                // Initialize crop to 70% of the shortest canvas dimension for better default
+                const size = Math.min(this.canvas.width, this.canvas.height) * 0.7;
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                this.cropArea = {
+                    x: centerX - size / 2,
+                    y: centerY - size / 2,
+                    width: size,
+                    height: size
+                };
                 this.render();
                 this.updateDownloadButton();
                 this.showSuccess('Image loaded successfully!');

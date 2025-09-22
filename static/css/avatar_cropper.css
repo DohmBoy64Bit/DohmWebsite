@@ -150,10 +150,40 @@
     height: clamp(320px, 45vh, 560px);
 }
 
+/* Keep control panel from forcing extra vertical space; make it scroll within canvas height */
+.control-panel {
+    max-height: clamp(320px, 45vh, 560px);
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #f4511e #1a1a1a; /* Firefox */
+}
+
 @media (min-width: 1024px) {
     .cropper-canvas {
         height: clamp(380px, 55vh, 640px);
     }
+    .control-panel {
+        max-height: clamp(380px, 55vh, 640px);
+    }
+}
+
+/* WebKit custom scrollbar to match tools (Chrome Downloader) */
+.control-panel::-webkit-scrollbar {
+    width: 12px;
+}
+
+.control-panel::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border: 2px solid #f97316;
+}
+
+.control-panel::-webkit-scrollbar-thumb {
+    background: #f4511e;
+    border: 2px solid #fb8c00;
+}
+
+.control-panel::-webkit-scrollbar-thumb:hover {
+    background: #fb8c00;
 }
 
 /* Drag and Drop Styling */

@@ -347,7 +347,15 @@
         padding: 1.2rem;
         margin-bottom: 1.5rem;
         box-shadow: 0 0 15px rgba(255,140,0,0.3);
+        max-height: 60vh;
+        overflow: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #f4511e #1a1a1a;
     }
+    .api-section::-webkit-scrollbar { width: 12px; }
+    .api-section::-webkit-scrollbar-track { background: #1a1a1a; border: 2px solid #f97316; }
+    .api-section::-webkit-scrollbar-thumb { background: #f4511e; border: 2px solid #fb8c00; }
+    .api-section::-webkit-scrollbar-thumb:hover { background: #fb8c00; }
 
     .api-section:hover {
         box-shadow: 0 0 25px rgba(255,140,0,0.5);
