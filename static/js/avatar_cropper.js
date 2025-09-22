@@ -572,9 +572,6 @@ class RetroAvatarCropper {
         }
 
         this.ctx.setLineDash([]);
-
-        // Draw resize handles
-        this.drawResizeHandles();
     }
 
     drawBorder() {
@@ -651,30 +648,7 @@ class RetroAvatarCropper {
         }
     }
 
-    drawResizeHandles() {
-        const corners = this.getCornerPoints();
-        const handleSize = 8;
 
-        this.ctx.fillStyle = '#00ff00';
-        this.ctx.strokeStyle = '#ffffff';
-        this.ctx.lineWidth = 1;
-
-        for (const [corner, point] of Object.entries(corners)) {
-            // Draw square handle
-            this.ctx.fillRect(
-                point.x - handleSize / 2,
-                point.y - handleSize / 2,
-                handleSize,
-                handleSize
-            );
-            this.ctx.strokeRect(
-                point.x - handleSize / 2,
-                point.y - handleSize / 2,
-                handleSize,
-                handleSize
-            );
-        }
-    }
 
     createPreviews() {
         const previewGrid = document.getElementById('preview-grid');

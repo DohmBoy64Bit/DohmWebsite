@@ -347,10 +347,10 @@
         </div>
 
         <!-- Cropper Canvas Area -->
-        <div class="flex flex-col lg:flex-row gap-6">
+        <div class="flex flex-col xl:flex-row gap-4">
             <!-- Main Canvas -->
             <div class="flex-1">
-                <div id="cropper-canvas" class="relative bg-black border-2 border-orange-500 rounded-lg overflow-hidden" style="height: 400px;">
+                <div id="cropper-canvas" class="relative bg-black border-2 border-orange-500 rounded-lg overflow-hidden" style="height: 600px;">
                     <canvas id="main-canvas" class="w-full h-full"></canvas>
                     <div id="drop-overlay" class="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center text-white text-xl opacity-0 transition-opacity duration-300 pointer-events-none">
                         DROP IMAGE HERE
@@ -359,52 +359,52 @@
             </div>
 
             <!-- Control Panel -->
-            <div class="lg:w-80">
-                <div class="control-panel">
+            <div class="xl:w-72">
+                <div class="control-panel grid grid-cols-2 xl:grid-cols-1 gap-3">
                     <!-- Shape Toggle -->
-                    <div class="bg-gray-800 p-4 rounded-lg border border-orange-500">
-                        <h3 class="text-orange-500 font-vt323 mb-3 text-center">CROP SHAPE</h3>
-                        <div class="flex gap-2 justify-center">
-                            <button id="shape-circle" class="retro-button-small toggled">CIRCLE</button>
-                            <button id="shape-square" class="retro-button-small">SQUARE</button>
+                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500">
+                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">SHAPE</h3>
+                        <div class="flex gap-1 justify-center">
+                            <button id="shape-circle" class="retro-button-tiny toggled">○</button>
+                            <button id="shape-square" class="retro-button-tiny">□</button>
                         </div>
                     </div>
 
                     <!-- Zoom Controls -->
-                    <div class="bg-gray-800 p-4 rounded-lg border border-orange-500">
-                        <h3 class="text-orange-500 font-vt323 mb-3 text-center">ZOOM</h3>
-                        <div class="flex gap-2 justify-center">
-                            <button id="zoom-out" class="retro-button-small">-</button>
-                            <button id="zoom-fit" class="retro-button-small">FIT</button>
-                            <button id="zoom-in" class="retro-button-small">+</button>
+                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500">
+                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">ZOOM</h3>
+                        <div class="flex gap-1 justify-center">
+                            <button id="zoom-out" class="retro-button-tiny">-</button>
+                            <button id="zoom-fit" class="retro-button-tiny">FIT</button>
+                            <button id="zoom-in" class="retro-button-tiny">+</button>
                         </div>
                     </div>
 
                     <!-- Rotation -->
-                    <div class="bg-gray-800 p-4 rounded-lg border border-orange-500">
-                        <h3 class="text-orange-500 font-vt323 mb-3 text-center">ROTATION</h3>
+                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500">
+                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">ROTATE</h3>
                         <input type="range" id="rotation-slider" min="-180" max="180" value="0" class="w-full">
-                        <div class="text-center text-gray-300 text-sm mt-1" id="rotation-value">0°</div>
+                        <div class="text-center text-gray-300 text-xs mt-1" id="rotation-value">0°</div>
                     </div>
 
                     <!-- Flip Controls -->
-                    <div class="bg-gray-800 p-4 rounded-lg border border-orange-500">
-                        <h3 class="text-orange-500 font-vt323 mb-3 text-center">FLIP</h3>
-                        <div class="flex gap-2 justify-center">
-                            <button id="flip-horizontal" class="retro-button-small">H</button>
-                            <button id="flip-vertical" class="retro-button-small">V</button>
+                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500">
+                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">FLIP</h3>
+                        <div class="flex gap-1 justify-center">
+                            <button id="flip-horizontal" class="retro-button-tiny">↔</button>
+                            <button id="flip-vertical" class="retro-button-tiny">↕</button>
                         </div>
                     </div>
 
                     <!-- Border Options -->
-                    <div class="bg-gray-800 p-4 rounded-lg border border-orange-500">
-                        <h3 class="text-orange-500 font-vt323 mb-3 text-center">BORDERS</h3>
-                        <select id="border-select" class="retro-select w-full mb-2">
-                            <option value="none">No Border</option>
-                            <option value="solid">Solid Border</option>
-                            <option value="retro">Retro Arcade</option>
-                            <option value="rgb">RGB Spectrum</option>
-                            <option value="custom">Custom Gradient</option>
+                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500 col-span-2 xl:col-span-1">
+                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">BORDERS</h3>
+                        <select id="border-select" class="retro-select w-full mb-2 text-sm">
+                            <option value="none">None</option>
+                            <option value="solid">Solid</option>
+                            <option value="retro">Retro</option>
+                            <option value="rgb">RGB</option>
+                            <option value="custom">Custom</option>
                         </select>
                         <input type="color" id="border-color" class="hidden w-full">
                         <div class="text-center">
@@ -413,12 +413,12 @@
                     </div>
 
                     <!-- Quick Actions -->
-                    <div class="bg-gray-800 p-4 rounded-lg border border-orange-500">
-                        <h3 class="text-orange-500 font-vt323 mb-3 text-center">ACTIONS</h3>
-                        <div class="space-y-2">
-                            <button id="center-crop" class="retro-button-small w-full">CENTER</button>
-                            <button id="reset-crop" class="retro-button-small w-full">RESET</button>
-                            <button id="download-btn" class="retro-button w-full" disabled>DOWNLOAD</button>
+                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500 col-span-2 xl:col-span-1">
+                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">ACTIONS</h3>
+                        <div class="space-y-1">
+                            <button id="center-crop" class="retro-button-tiny w-full">CENTER</button>
+                            <button id="reset-crop" class="retro-button-tiny w-full">RESET</button>
+                            <button id="download-btn" class="retro-button w-full text-sm" disabled>DOWNLOAD</button>
                         </div>
                     </div>
                 </div>
