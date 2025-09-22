@@ -284,8 +284,8 @@
 
     .control-panel {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 0.75rem;
         margin-bottom: 1rem;
     }
 
@@ -295,25 +295,30 @@
         gap: 1rem;
         flex-wrap: wrap;
         margin-top: 1rem;
+        align-items: flex-end; /* bottom align for tidy row */
     }
 
     .preview-item {
-        background: rgba(0, 0, 0, 0.8);
-        border: 2px solid #f97316;
-        border-radius: 8px;
-        padding: 0.5rem;
+        background: transparent;
+        border: none;
+        padding: 0; /* no frame */
         text-align: center;
-        box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
+        box-shadow: none;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 0; /* override any external min-width */
     }
 
     .preview-item canvas {
         border-radius: 4px;
+        display: block; /* remove extra inline spacing */
     }
 
     .preview-label {
         color: #fbbf24;
-        font-size: 0.9rem;
-        margin-top: 0.5rem;
+        font-size: 0.8rem; /* slightly smaller */
+        margin-top: 0.4rem;
         text-shadow: 0 0 5px #f97316;
     }
 
@@ -347,10 +352,10 @@
         </div>
 
         <!-- Cropper Canvas Area -->
-        <div class="flex flex-col xl:flex-row gap-4">
+        <div class="flex flex-col lg:flex-row gap-4">
             <!-- Main Canvas -->
             <div class="flex-1">
-                <div id="cropper-canvas" class="relative bg-black border-2 border-orange-500 rounded-lg overflow-hidden" style="height: 600px;">
+                <div id="cropper-canvas" class="cropper-canvas relative bg-black border-2 border-orange-500 rounded-lg overflow-hidden">
                     <canvas id="main-canvas" class="w-full h-full"></canvas>
                     <div id="drop-overlay" class="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center text-white text-xl opacity-0 transition-opacity duration-300 pointer-events-none">
                         DROP IMAGE HERE
@@ -359,11 +364,11 @@
             </div>
 
             <!-- Control Panel -->
-            <div class="xl:w-72">
-                <div class="control-panel grid grid-cols-2 xl:grid-cols-1 gap-3">
+            <div class="lg:w-80">
+                <div class="control-panel">
                     <!-- Shape Toggle -->
-                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500">
-                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">SHAPE</h3>
+                    <div class="control-group">
+                        <h3 class="control-title">SHAPE</h3>
                         <div class="flex gap-1 justify-center">
                             <button id="shape-circle" class="retro-button-tiny toggled">○</button>
                             <button id="shape-square" class="retro-button-tiny">□</button>
@@ -371,8 +376,8 @@
                     </div>
 
                     <!-- Zoom Controls -->
-                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500">
-                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">ZOOM</h3>
+                    <div class="control-group">
+                        <h3 class="control-title">ZOOM</h3>
                         <div class="flex gap-1 justify-center">
                             <button id="zoom-out" class="retro-button-tiny">-</button>
                             <button id="zoom-fit" class="retro-button-tiny">FIT</button>
@@ -381,15 +386,15 @@
                     </div>
 
                     <!-- Rotation -->
-                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500">
-                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">ROTATE</h3>
+                    <div class="control-group">
+                        <h3 class="control-title">ROTATE</h3>
                         <input type="range" id="rotation-slider" min="-180" max="180" value="0" class="w-full">
                         <div class="text-center text-gray-300 text-xs mt-1" id="rotation-value">0°</div>
                     </div>
 
                     <!-- Flip Controls -->
-                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500">
-                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">FLIP</h3>
+                    <div class="control-group">
+                        <h3 class="control-title">FLIP</h3>
                         <div class="flex gap-1 justify-center">
                             <button id="flip-horizontal" class="retro-button-tiny">↔</button>
                             <button id="flip-vertical" class="retro-button-tiny">↕</button>
@@ -397,8 +402,8 @@
                     </div>
 
                     <!-- Border Options -->
-                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500 col-span-2 xl:col-span-1">
-                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">BORDERS</h3>
+                    <div class="control-group">
+                        <h3 class="control-title">BORDERS</h3>
                         <select id="border-select" class="retro-select w-full mb-2 text-sm">
                             <option value="none">None</option>
                             <option value="solid">Solid</option>
@@ -413,12 +418,12 @@
                     </div>
 
                     <!-- Quick Actions -->
-                    <div class="bg-gray-800 p-3 rounded-lg border border-orange-500 col-span-2 xl:col-span-1">
-                        <h3 class="text-orange-500 font-vt323 mb-2 text-center text-sm">ACTIONS</h3>
+                    <div class="control-group">
+                        <h3 class="control-title">ACTIONS</h3>
                         <div class="space-y-1">
                             <button id="center-crop" class="retro-button-tiny w-full">CENTER</button>
                             <button id="reset-crop" class="retro-button-tiny w-full">RESET</button>
-                            <button id="download-btn" class="retro-button w-full text-sm" disabled>DOWNLOAD</button>
+                            <button id="download-btn" class="retro-button-small w-full text-sm" disabled>DOWNLOAD</button>
                         </div>
                     </div>
                 </div>

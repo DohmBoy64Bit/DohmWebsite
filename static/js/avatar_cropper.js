@@ -4,6 +4,134 @@
  */
 
 class RetroAvatarCropper {
+    // Static border properties (matching original L class)
+    static borderType = 'none';
+    static borderSize = 0.05;
+    static borderColor = '#ff8c00';
+    static customGradient = null;
+    static shape = 'circle';
+
+    // Static border application method (matching original L.apply)
+    static applyBorder(canvas) {
+        if (this.borderType === 'none' || this.borderSize === 0) return;
+
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const cropRadius = Math.min(canvas.width, canvas.height) / 2;
+        const borderRadius = cropRadius * (1 - this.borderSize);
+
+        if (this.borderType === 'solid') {
+            ctx.fillStyle = this.borderColor;
+            if (this.shape === 'square') {
+                const inset = Math.min(canvas.width, canvas.height) * this.borderSize;
+                ctx.beginPath();
+                ctx.rect(0, 0, canvas.width, canvas.height);
+                ctx.rect(inset, inset, canvas.width - inset * 2, canvas.height - inset * 2);
+                ctx.fill('evenodd');
+            } else {
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
+                ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
+                ctx.fill();
+            }
+        } else if (this.borderType === 'custom' && this.customGradient) {
+            this.applyCustomGradientBorder(canvas);
+        } else if (this.borderType === 'retro' || this.borderType === 'rgb') {
+            this.applyPredefinedGradientBorder(canvas);
+        }
+    }
+
+    // Static method for custom gradient borders
+    static applyCustomGradientBorder(canvas) {
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const cropRadius = canvas.width / 2;
+        const borderRadius = cropRadius * (1 - this.borderSize);
+
+        const angle = (-270 - this.customGradient.angle) * Math.PI / 180;
+        const angle2 = (-270 - (this.customGradient.angle + 180)) * Math.PI / 180;
+
+        const canvasSize = Math.max(canvas.width, canvas.height);
+        const p1 = {
+            x: 0.5 / Math.max(Math.abs(Math.cos(angle)), Math.abs(Math.sin(angle))) * Math.cos(angle) * canvasSize + canvasSize / 2,
+            y: 0.5 / Math.max(Math.abs(Math.cos(angle)), Math.abs(Math.sin(angle))) * Math.sin(angle) * canvasSize + canvasSize / 2
+        };
+        const p2 = {
+            x: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.cos(angle2) * canvasSize + canvasSize / 2,
+            y: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.sin(angle2) * canvasSize + canvasSize / 2
+        };
+
+        const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+        this.customGradient.gradient.forEach(stop => {
+            gradient.addColorStop(stop.pos, stop.color);
+        });
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
+        ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
+        ctx.fill();
+    }
+
+    // Static method for predefined gradient borders
+    static applyPredefinedGradientBorder(canvas) {
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const cropRadius = canvas.width / 2;
+        const borderRadius = cropRadius * (1 - this.borderSize);
+
+        const gradientData = {
+            'retro': {
+                angle: 0,
+                gradient: [
+                    { pos: 0, color: '#f97316' },
+                    { pos: 0.25, color: '#fb8c00' },
+                    { pos: 0.5, color: '#fbbf24' },
+                    { pos: 0.75, color: '#f97316' },
+                    { pos: 1, color: '#fb8c00' }
+                ]
+            },
+            'rgb': {
+                angle: 0,
+                gradient: [
+                    { pos: 0, color: '#ff0000' },
+                    { pos: 0.33, color: '#00ff00' },
+                    { pos: 0.67, color: '#0000ff' },
+                    { pos: 1, color: '#ff0000' }
+                ]
+            }
+        };
+
+        const data = gradientData[this.borderType] || gradientData['retro'];
+
+        const angle = (-270 - data.angle) * Math.PI / 180;
+        const angle2 = (-270 - (data.angle + 180)) * Math.PI / 180;
+
+        const canvasSize = Math.max(canvas.width, canvas.height);
+        const p1 = {
+            x: 0.5 / Math.max(Math.abs(Math.cos(angle)), Math.abs(Math.sin(angle))) * Math.cos(angle) * canvasSize + canvasSize / 2,
+            y: 0.5 / Math.max(Math.abs(Math.cos(angle)), Math.abs(Math.sin(angle))) * Math.sin(angle) * canvasSize + canvasSize / 2
+        };
+        const p2 = {
+            x: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.cos(angle2) * canvasSize + canvasSize / 2,
+            y: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.sin(angle2) * canvasSize + canvasSize / 2
+        };
+
+        const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+        data.gradient.forEach(stop => {
+            gradient.addColorStop(stop.pos, stop.color);
+        });
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
+        ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
+        ctx.fill();
+    }
+
     constructor() {
         this.canvas = null;
         this.ctx = null;
@@ -12,6 +140,8 @@ class RetroAvatarCropper {
         this.cropShape = 'circle'; // 'circle' or 'square'
         this.rotation = 0;
         this.zoom = 1;
+        this.isFlippedX = false;
+        this.isFlippedY = false;
         this.borderType = 'none';
         this.borderSize = 0.05;
         this.borderColor = '#ff8c00';
@@ -27,6 +157,9 @@ class RetroAvatarCropper {
         this.setupEventListeners();
         this.createPreviews();
         this.updateUI();
+
+        // Handle responsive resizing
+        window.addEventListener('resize', () => this.handleResize());
     }
 
     initializeCanvas() {
@@ -102,8 +235,17 @@ class RetroAvatarCropper {
         document.getElementById('border-select').addEventListener('change', (e) => this.setBorderType(e.target.value));
         document.getElementById('border-size').addEventListener('input', (e) => {
             this.borderSize = parseFloat(e.target.value);
+            RetroAvatarCropper.borderSize = this.borderSize;
             this.render();
         });
+        const borderColorInput = document.getElementById('border-color');
+        if (borderColorInput) {
+            borderColorInput.addEventListener('input', (e) => {
+                this.borderColor = e.target.value;
+                RetroAvatarCropper.borderColor = this.borderColor;
+                this.render();
+            });
+        }
 
         document.getElementById('center-crop').addEventListener('click', () => this.centerCrop());
         document.getElementById('reset-crop').addEventListener('click', () => this.resetCrop());
@@ -161,6 +303,8 @@ class RetroAvatarCropper {
     resetCrop() {
         this.rotation = 0;
         this.zoom = 1;
+        this.isFlippedX = false;
+        this.isFlippedY = false;
         this.cropShape = 'circle';
         this.borderType = 'none';
         this.borderSize = 0.05;
@@ -172,6 +316,7 @@ class RetroAvatarCropper {
 
     setCropShape(shape) {
         this.cropShape = shape;
+        RetroAvatarCropper.shape = shape;
         document.getElementById('shape-circle').classList.toggle('toggled', shape === 'circle');
         document.getElementById('shape-square').classList.toggle('toggled', shape === 'square');
         this.render();
@@ -179,10 +324,18 @@ class RetroAvatarCropper {
 
     setBorderType(type) {
         this.borderType = type;
+
+        // Update static properties for border system
+        RetroAvatarCropper.borderType = type;
+        RetroAvatarCropper.borderSize = this.borderSize;
+        RetroAvatarCropper.shape = this.cropShape;
+
         const colorInput = document.getElementById('border-color');
 
         if (type === 'solid') {
             colorInput.classList.remove('hidden');
+            colorInput.value = this.borderColor;
+            RetroAvatarCropper.borderColor = this.borderColor;
         } else {
             colorInput.classList.add('hidden');
         }
@@ -193,6 +346,11 @@ class RetroAvatarCropper {
     setCustomGradient(gradientData) {
         this.customGradient = gradientData;
         this.borderType = 'custom';
+
+        // Update static properties for border system
+        RetroAvatarCropper.borderType = 'custom';
+        RetroAvatarCropper.customGradient = gradientData;
+
         this.render();
     }
 
@@ -207,17 +365,13 @@ class RetroAvatarCropper {
     }
 
     flipHorizontal() {
-        this.ctx.save();
-        this.ctx.scale(-1, 1);
+        this.isFlippedX = !this.isFlippedX;
         this.render();
-        this.ctx.restore();
     }
 
     flipVertical() {
-        this.ctx.save();
-        this.ctx.scale(1, -1);
+        this.isFlippedY = !this.isFlippedY;
         this.render();
-        this.ctx.restore();
     }
 
     handleMouseDown(e) {
@@ -270,12 +424,14 @@ class RetroAvatarCropper {
     }
 
     handleWheel(e) {
+        // Zoom only with Ctrl/Meta to mimic pro tools and avoid accidental scroll
+        if (!(e.ctrlKey || e.metaKey)) return;
         e.preventDefault();
-        if (e.deltaY < 0) {
-            this.zoomIn();
-        } else {
-            this.zoomOut();
-        }
+        const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+        this.zoom *= zoomFactor;
+        // Clamp zoom
+        this.zoom = Math.max(0.1, Math.min(this.zoom, 10));
+        this.render();
     }
 
     handleTouchStart(e) {
@@ -287,6 +443,11 @@ class RetroAvatarCropper {
                 clientY: touch.clientY
             });
             this.handleMouseDown(mouseEvent);
+            this.pinchStartDistance = null;
+        } else if (e.touches.length === 2) {
+            // Initialize pinch-to-zoom
+            const [t1, t2] = e.touches;
+            this.pinchStartDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
         }
     }
 
@@ -299,6 +460,14 @@ class RetroAvatarCropper {
                 clientY: touch.clientY
             });
             this.handleMouseMove(mouseEvent);
+        } else if (e.touches.length === 2 && this.pinchStartDistance) {
+            const [t1, t2] = e.touches;
+            const distance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+            const factor = distance / this.pinchStartDistance;
+            this.zoom *= factor;
+            this.zoom = Math.max(0.1, Math.min(this.zoom, 10));
+            this.pinchStartDistance = distance;
+            this.render();
         }
     }
 
@@ -328,8 +497,8 @@ class RetroAvatarCropper {
     }
 
     getMouseAction(x, y) {
-        // Check if point is near resize handles (corners)
-        const resizeThreshold = 20; // pixels from corner to be considered resize
+        // Check if point is near resize handles (corners) first
+        const resizeThreshold = 15; // pixels from corner to be considered resize
         const corners = this.getCornerPoints();
 
         for (const [corner, point] of Object.entries(corners)) {
@@ -508,7 +677,9 @@ class RetroAvatarCropper {
         // Move to center for rotation
         this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
         this.ctx.rotate(this.rotation * Math.PI / 180);
-        this.ctx.scale(this.zoom, this.zoom);
+        const scaleX = (this.isFlippedX ? -1 : 1) * this.zoom;
+        const scaleY = (this.isFlippedY ? -1 : 1) * this.zoom;
+        this.ctx.scale(scaleX, scaleY);
         this.ctx.translate(-this.image.width / 2, -this.image.height / 2);
 
         // Draw image
@@ -572,6 +743,14 @@ class RetroAvatarCropper {
         }
 
         this.ctx.setLineDash([]);
+
+        // Draw resize handles at corners for better affordance
+        const handleSize = 8;
+        const corners = this.getCornerPoints();
+        this.ctx.fillStyle = '#00ff00';
+        Object.values(corners).forEach(p => {
+            this.ctx.fillRect(p.x - handleSize / 2, p.y - handleSize / 2, handleSize, handleSize);
+        });
     }
 
     drawBorder() {
@@ -581,16 +760,24 @@ class RetroAvatarCropper {
 
         if (this.borderType === 'solid') {
             // Draw border inward - create a ring from crop edge inward
-            const borderRadius = cropRadius * (1 - this.borderSize);
             this.ctx.fillStyle = this.borderColor;
-            this.ctx.beginPath();
-            this.ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
-            this.ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
-            this.ctx.fill();
+            if (this.cropShape === 'square') {
+                const inset = this.cropArea.width * this.borderSize;
+                this.ctx.beginPath();
+                this.ctx.rect(this.cropArea.x, this.cropArea.y, this.cropArea.width, this.cropArea.height);
+                this.ctx.rect(this.cropArea.x + inset, this.cropArea.y + inset, this.cropArea.width - inset * 2, this.cropArea.height - inset * 2);
+                this.ctx.fill('evenodd');
+            } else {
+                const borderRadius = cropRadius * (1 - this.borderSize);
+                this.ctx.beginPath();
+                this.ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
+                this.ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
+                this.ctx.fill();
+            }
         } else if (this.borderType === 'custom' && this.customGradient) {
             this.drawCustomGradientBorder();
-        } else if (this.borderType.startsWith('lgbt') || this.borderType.startsWith('trans') || this.borderType.startsWith('nonbinary')) {
-            this.drawPrideBorder();
+        } else if (this.borderType === 'retro' || this.borderType === 'rgb') {
+            this.drawPresetGradientBorder();
         }
     }
 
@@ -599,56 +786,96 @@ class RetroAvatarCropper {
         const centerY = this.cropArea.y + this.cropArea.height / 2;
         const cropRadius = this.cropArea.width / 2;
         const borderRadius = cropRadius * (1 - this.borderSize);
-        const rings = Math.max(6, this.customGradient.gradient.length);
 
-        // Create gradient for each ring (expanding inward)
-        for (let i = 0; i < rings; i++) {
-            const ratio = i / rings;
-            const ringOuter = cropRadius - (cropRadius - borderRadius) * ratio;
-            const ringInner = cropRadius - (cropRadius - borderRadius) * (ratio + 1/rings);
+        // Calculate gradient direction based on angle (matching original implementation)
+        const angle = (-270 - this.customGradient.angle) * Math.PI / 180;
+        const angle2 = (-270 - (this.customGradient.angle + 180)) * Math.PI / 180;
 
-            // Create radial gradient for this ring
-            const gradient = this.ctx.createRadialGradient(centerX, centerY, ringInner, centerX, centerY, ringOuter);
+        const canvasSize = Math.max(this.canvas.width, this.canvas.height);
+        const p1 = {
+            x: 0.5 / Math.max(Math.abs(Math.cos(angle)), Math.abs(Math.sin(angle))) * Math.cos(angle) * canvasSize + canvasSize / 2,
+            y: 0.5 / Math.max(Math.abs(Math.cos(angle)), Math.abs(Math.sin(angle))) * Math.sin(angle) * canvasSize + canvasSize / 2
+        };
+        const p2 = {
+            x: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.cos(angle2) * canvasSize + canvasSize / 2,
+            y: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.sin(angle2) * canvasSize + canvasSize / 2
+        };
 
-            // Add color stops from custom gradient
-            this.customGradient.gradient.forEach(stop => {
-                gradient.addColorStop(stop.pos, stop.color);
-            });
+        // Create linear gradient across the entire border area
+        const gradient = this.ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
 
-            this.ctx.fillStyle = gradient;
-            this.ctx.beginPath();
-            this.ctx.arc(centerX, centerY, ringOuter, 0, 2 * Math.PI);
-            this.ctx.arc(centerX, centerY, ringInner, 0, 2 * Math.PI, true);
-            this.ctx.fill();
-        }
+        // Add color stops from custom gradient
+        this.customGradient.gradient.forEach(stop => {
+            gradient.addColorStop(stop.pos, stop.color);
+        });
+
+        // Fill the entire border area with the gradient
+        this.ctx.fillStyle = gradient;
+        this.ctx.beginPath();
+        this.ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
+        this.ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
+        this.ctx.fill();
     }
 
-    drawPrideBorder() {
+    drawPresetGradientBorder() {
         const centerX = this.cropArea.x + this.cropArea.width / 2;
         const centerY = this.cropArea.y + this.cropArea.height / 2;
         const cropRadius = this.cropArea.width / 2;
         const borderRadius = cropRadius * (1 - this.borderSize);
-        const rings = 6;
 
-        const borderColors = {
-            'retro': ['#f97316', '#fb8c00', '#fbbf24', '#f97316', '#fb8c00', '#fbbf24'],
-            'rgb': ['#ff0000', '#00ff00', '#0000ff', '#ff0000', '#00ff00', '#0000ff']
+        // Define gradient data for predefined borders (matching original)
+        const gradientData = {
+            'retro': {
+                angle: 0,
+                gradient: [
+                    { pos: 0, color: '#f97316' },
+                    { pos: 0.25, color: '#fb8c00' },
+                    { pos: 0.5, color: '#fbbf24' },
+                    { pos: 0.75, color: '#f97316' },
+                    { pos: 1, color: '#fb8c00' }
+                ]
+            },
+            'rgb': {
+                angle: 0,
+                gradient: [
+                    { pos: 0, color: '#ff0000' },
+                    { pos: 0.33, color: '#00ff00' },
+                    { pos: 0.67, color: '#0000ff' },
+                    { pos: 1, color: '#ff0000' }
+                ]
+            }
         };
 
-        const colors = borderColors[this.borderType] || borderColors['retro'];
+        const data = gradientData[this.borderType] || gradientData['retro'];
 
-        // Draw rings expanding inward
-        for (let i = 0; i < rings; i++) {
-            const ratio = i / rings;
-            const ringOuter = cropRadius - (cropRadius - borderRadius) * ratio;
-            const ringInner = cropRadius - (cropRadius - borderRadius) * (ratio + 1/rings);
+        // Calculate gradient direction based on angle (matching original implementation)
+        const angle = (-270 - data.angle) * Math.PI / 180;
+        const angle2 = (-270 - (data.angle + 180)) * Math.PI / 180;
 
-            this.ctx.beginPath();
-            this.ctx.arc(centerX, centerY, ringOuter, 0, 2 * Math.PI);
-            this.ctx.arc(centerX, centerY, ringInner, 0, 2 * Math.PI, true);
-            this.ctx.fillStyle = colors[i % colors.length];
-            this.ctx.fill();
-        }
+        const canvasSize = Math.max(this.canvas.width, this.canvas.height);
+        const p1 = {
+            x: 0.5 / Math.max(Math.abs(Math.cos(angle)), Math.abs(Math.sin(angle))) * Math.cos(angle) * canvasSize + canvasSize / 2,
+            y: 0.5 / Math.max(Math.abs(Math.cos(angle)), Math.abs(Math.sin(angle))) * Math.sin(angle) * canvasSize + canvasSize / 2
+        };
+        const p2 = {
+            x: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.cos(angle2) * canvasSize + canvasSize / 2,
+            y: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.sin(angle2) * canvasSize + canvasSize / 2
+        };
+
+        // Create linear gradient across the entire border area
+        const gradient = this.ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+
+        // Add color stops from predefined gradient
+        data.gradient.forEach(stop => {
+            gradient.addColorStop(stop.pos, stop.color);
+        });
+
+        // Fill the entire border area with the gradient
+        this.ctx.fillStyle = gradient;
+        this.ctx.beginPath();
+        this.ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
+        this.ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
+        this.ctx.fill();
     }
 
 
@@ -677,6 +904,34 @@ class RetroAvatarCropper {
         });
     }
 
+    handleResize() {
+        const container = document.getElementById('cropper-canvas');
+        if (!container || !this.canvas) return;
+        const rect = container.getBoundingClientRect();
+        const prevW = this.canvas.width || 1;
+        const prevH = this.canvas.height || 1;
+        const scaleX = rect.width / prevW;
+        const scaleY = rect.height / prevH;
+        const uniform = Math.min(scaleX, scaleY);
+
+        // Update canvas size
+        this.canvas.width = rect.width;
+        this.canvas.height = rect.height;
+
+        // Keep crop area shape by uniform scaling around its center
+        const centerX = this.cropArea.x + this.cropArea.width / 2;
+        const centerY = this.cropArea.y + this.cropArea.height / 2;
+        const newCenterX = centerX * scaleX;
+        const newCenterY = centerY * scaleY;
+        const newWidth = this.cropArea.width * uniform;
+        const newHeight = this.cropArea.height * uniform;
+        this.cropArea.x = newCenterX - newWidth / 2;
+        this.cropArea.y = newCenterY - newHeight / 2;
+        this.cropArea.width = newWidth;
+        this.cropArea.height = newHeight;
+        this.render();
+    }
+
     updatePreviews() {
         if (!this.image) return;
 
@@ -684,20 +939,53 @@ class RetroAvatarCropper {
             const ctx = preview.ctx;
             ctx.clearRect(0, 0, preview.size, preview.size);
 
-            // Calculate source rectangle from crop area
-            const sourceX = (this.cropArea.x - this.canvas.width / 2) / this.zoom + this.image.width / 2;
-            const sourceY = (this.cropArea.y - this.canvas.height / 2) / this.zoom + this.image.height / 2;
+            // Calculate the center of the crop area in canvas coordinates
+            const cropCenterX = this.cropArea.x + this.cropArea.width / 2;
+            const cropCenterY = this.cropArea.y + this.cropArea.height / 2;
+
+            // Transform canvas coordinates back to image coordinates
+            // Reverse the transformations applied in render():
+            // 1. Undo the centering translation
+            // 2. Undo the zoom scaling
+            // 3. Apply inverse rotation
+            // 4. Add back the image centering
+
+            const canvasCenterX = this.canvas.width / 2;
+            const canvasCenterY = this.canvas.height / 2;
+            const imageCenterX = this.image.width / 2;
+            const imageCenterY = this.image.height / 2;
+
+            // Step 1: Remove canvas centering
+            let localX = cropCenterX - canvasCenterX;
+            let localY = cropCenterY - canvasCenterY;
+
+            // Step 2: Undo zoom scaling
+            localX /= this.zoom;
+            localY /= this.zoom;
+
+            // Step 3: Apply inverse rotation
+            const cos = Math.cos(-this.rotation * Math.PI / 180);
+            const sin = Math.sin(-this.rotation * Math.PI / 180);
+            const rotatedX = localX * cos - localY * sin;
+            const rotatedY = localX * sin + localY * cos;
+
+            // Step 4: Add image centering back
+            const sourceX = rotatedX + imageCenterX;
+            const sourceY = rotatedY + imageCenterY;
+
+            // Calculate source dimensions (also need to account for rotation)
             const sourceWidth = this.cropArea.width / this.zoom;
             const sourceHeight = this.cropArea.height / this.zoom;
 
             // Draw rotated and cropped image
             ctx.save();
             ctx.translate(preview.size / 2, preview.size / 2);
-            ctx.rotate(this.rotation * Math.PI / 180);
 
-            // Scale to fit preview
+            // Scale to fit preview while maintaining aspect ratio
             const scale = preview.size / Math.max(sourceWidth, sourceHeight);
-            ctx.scale(scale, scale);
+            const pScaleX = (this.isFlippedX ? -1 : 1) * scale;
+            const pScaleY = (this.isFlippedY ? -1 : 1) * scale;
+            ctx.scale(pScaleX, pScaleY);
 
             ctx.drawImage(
                 this.image,
@@ -720,6 +1008,9 @@ class RetroAvatarCropper {
             }
 
             ctx.restore();
+
+            // Apply borders to preview (matching original behavior)
+            RetroAvatarCropper.applyBorder(preview.canvas);
         });
     }
 
@@ -743,20 +1034,50 @@ class RetroAvatarCropper {
         tempCanvas.width = 512;
         tempCanvas.height = 512;
 
-        // Calculate scaling to fit the crop area
-        const scale = 512 / this.cropArea.width;
+        // Calculate the center of the crop area in canvas coordinates
+        const cropCenterX = this.cropArea.x + this.cropArea.width / 2;
+        const cropCenterY = this.cropArea.y + this.cropArea.height / 2;
 
-        // Center the crop area
-        tempCtx.save();
-        tempCtx.translate(256, 256);
-        tempCtx.rotate(this.rotation * Math.PI / 180);
-        tempCtx.scale(scale * this.zoom, scale * this.zoom);
+        // Transform canvas coordinates back to image coordinates
+        // Reverse the transformations applied in render():
+        // 1. Undo the centering translation
+        // 2. Undo the zoom scaling
+        // 3. Apply inverse rotation
+        // 4. Add back the image centering
 
-        // Draw the cropped portion
-        const sourceX = (this.cropArea.x - this.canvas.width / 2) / this.zoom + this.image.width / 2;
-        const sourceY = (this.cropArea.y - this.canvas.height / 2) / this.zoom + this.image.height / 2;
+        const canvasCenterX = this.canvas.width / 2;
+        const canvasCenterY = this.canvas.height / 2;
+        const imageCenterX = this.image.width / 2;
+        const imageCenterY = this.image.height / 2;
+
+        // Step 1: Remove canvas centering
+        let localX = cropCenterX - canvasCenterX;
+        let localY = cropCenterY - canvasCenterY;
+
+        // Step 2: Undo zoom scaling
+        localX /= this.zoom;
+        localY /= this.zoom;
+
+        // Step 3: Apply inverse rotation
+        const cos = Math.cos(-this.rotation * Math.PI / 180);
+        const sin = Math.sin(-this.rotation * Math.PI / 180);
+        const rotatedX = localX * cos - localY * sin;
+        const rotatedY = localX * sin + localY * cos;
+
+        // Step 4: Add image centering back
+        const sourceX = rotatedX + imageCenterX;
+        const sourceY = rotatedY + imageCenterY;
+
+        // Calculate source dimensions
         const sourceWidth = this.cropArea.width / this.zoom;
         const sourceHeight = this.cropArea.height / this.zoom;
+
+        // Center the crop area on the temp canvas
+        tempCtx.save();
+        tempCtx.translate(256, 256);
+        const dScaleX = (this.isFlippedX ? -1 : 1);
+        const dScaleY = (this.isFlippedY ? -1 : 1);
+        tempCtx.scale(dScaleX, dScaleY);
 
         tempCtx.drawImage(
             this.image,
@@ -779,6 +1100,9 @@ class RetroAvatarCropper {
         }
 
         tempCtx.restore();
+
+        // Apply borders to downloaded image (matching original behavior)
+        RetroAvatarCropper.applyBorder(tempCanvas);
 
         // Download the image
         tempCanvas.toBlob(blob => {
