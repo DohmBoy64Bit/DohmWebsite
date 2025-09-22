@@ -47,7 +47,7 @@ class RetroAvatarCropper {
         const ctx = canvas.getContext('2d');
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
-        const cropRadius = canvas.width / 2;
+        const cropRadius = Math.min(canvas.width, canvas.height) / 2;
         const borderRadius = cropRadius * (1 - this.borderSize);
 
         const angle = (-270 - this.customGradient.angle) * Math.PI / 180;
@@ -70,9 +70,17 @@ class RetroAvatarCropper {
 
         ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
-        ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
-        ctx.fill();
+        if (this.shape === 'square') {
+            const size = Math.min(canvas.width, canvas.height);
+            const inset = size * this.borderSize;
+            ctx.rect(0, 0, size, size);
+            ctx.rect(inset, inset, size - inset * 2, size - inset * 2);
+            ctx.fill('evenodd');
+        } else {
+            ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
+            ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
+            ctx.fill();
+        }
     }
 
     // Static method for predefined gradient borders
@@ -80,7 +88,7 @@ class RetroAvatarCropper {
         const ctx = canvas.getContext('2d');
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
-        const cropRadius = canvas.width / 2;
+        const cropRadius = Math.min(canvas.width, canvas.height) / 2;
         const borderRadius = cropRadius * (1 - this.borderSize);
 
         const gradientData = {
@@ -127,9 +135,17 @@ class RetroAvatarCropper {
 
         ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
-        ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
-        ctx.fill();
+        if (this.shape === 'square') {
+            const size = Math.min(canvas.width, canvas.height);
+            const inset = size * this.borderSize;
+            ctx.rect(0, 0, size, size);
+            ctx.rect(inset, inset, size - inset * 2, size - inset * 2);
+            ctx.fill('evenodd');
+        } else {
+            ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
+            ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
+            ctx.fill();
+        }
     }
 
     constructor() {
@@ -1072,7 +1088,7 @@ class RetroAvatarCropper {
         const sourceWidth = this.cropArea.width / this.zoom;
         const sourceHeight = this.cropArea.height / this.zoom;
 
-        // Center the crop area on the temp canvas
+        // Center the crop area on the temp canvas and scale to fill 512x512
         tempCtx.save();
         tempCtx.translate(256, 256);
         const dScaleX = (this.isFlippedX ? -1 : 1);
@@ -1085,17 +1101,17 @@ class RetroAvatarCropper {
             sourceY - sourceHeight / 2,
             sourceWidth,
             sourceHeight,
-            -sourceWidth / 2,
-            -sourceHeight / 2,
-            sourceWidth,
-            sourceHeight
+            -256,
+            -256,
+            512,
+            512
         );
 
         // Apply shape mask
         if (this.cropShape === 'circle') {
             tempCtx.globalCompositeOperation = 'destination-in';
             tempCtx.beginPath();
-            tempCtx.arc(0, 0, sourceWidth / 2, 0, 2 * Math.PI);
+            tempCtx.arc(0, 0, 256, 0, 2 * Math.PI);
             tempCtx.fill();
         }
 
