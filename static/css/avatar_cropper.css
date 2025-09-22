@@ -147,12 +147,12 @@
 
 /* Responsive canvas container */
 .cropper-canvas {
-    height: clamp(360px, 60vh, 600px);
+    height: clamp(320px, 45vh, 560px);
 }
 
 @media (min-width: 1024px) {
     .cropper-canvas {
-        height: clamp(420px, 70vh, 720px);
+        height: clamp(380px, 55vh, 640px);
     }
 }
 

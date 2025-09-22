@@ -249,7 +249,7 @@
         background: rgba(0, 0, 0, 0.9);
         border: 2px solid #f97316;
         border-radius: 8px;
-        padding: 1rem;
+        padding: 0.75rem;
         box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
         font-family: 'VT323', monospace;
         position: relative;
@@ -284,9 +284,9 @@
 
     .control-panel {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 0.75rem;
-        margin-bottom: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
     }
 
     .preview-grid {
@@ -352,7 +352,7 @@
         </div>
 
         <!-- Cropper Canvas Area -->
-        <div class="flex flex-col lg:flex-row gap-4">
+        <div class="flex flex-col lg:flex-row gap-3">
             <!-- Main Canvas -->
             <div class="flex-1">
                 <div id="cropper-canvas" class="cropper-canvas relative bg-black border-2 border-orange-500 rounded-lg overflow-hidden">
@@ -364,7 +364,7 @@
             </div>
 
             <!-- Control Panel -->
-            <div class="lg:w-80">
+            <div class="lg:w-72">
                 <div class="control-panel">
                     <!-- Shape Toggle -->
                     <div class="control-group">
@@ -422,6 +422,8 @@
                         <h3 class="control-title">ACTIONS</h3>
                         <div class="space-y-1">
                             <button id="center-crop" class="retro-button-tiny w-full">CENTER</button>
+                            <button id="fit-crop" class="retro-button-tiny w-full">FIT TO CROP</button>
+                            <button id="toggle-lock-center" class="retro-button-tiny w-full">LOCK CENTER (RESIZE)</button>
                             <button id="reset-crop" class="retro-button-tiny w-full">RESET</button>
                             <button id="download-btn" class="retro-button-small w-full text-sm" disabled>DOWNLOAD</button>
                         </div>

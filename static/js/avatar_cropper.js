@@ -33,7 +33,7 @@ class RetroAvatarCropper {
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
                 ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
-                ctx.fill();
+                ctx.fill('evenodd');
             }
         } else if (this.borderType === 'custom' && this.customGradient) {
             this.applyCustomGradientBorder(canvas);
@@ -63,7 +63,8 @@ class RetroAvatarCropper {
             y: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.sin(angle2) * canvasSize + canvasSize / 2
         };
 
-        const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+        // Match original gradient endpoints mapping
+        const gradient = ctx.createLinearGradient(p1.x, p2.y, p2.x, p1.y);
         this.customGradient.gradient.forEach(stop => {
             gradient.addColorStop(stop.pos, stop.color);
         });
@@ -79,7 +80,7 @@ class RetroAvatarCropper {
         } else {
             ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
             ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
-            ctx.fill();
+            ctx.fill('evenodd');
         }
     }
 
@@ -128,7 +129,7 @@ class RetroAvatarCropper {
             y: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.sin(angle2) * canvasSize + canvasSize / 2
         };
 
-        const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+        const gradient = ctx.createLinearGradient(p1.x, p2.y, p2.x, p1.y);
         data.gradient.forEach(stop => {
             gradient.addColorStop(stop.pos, stop.color);
         });
@@ -144,7 +145,7 @@ class RetroAvatarCropper {
         } else {
             ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
             ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
-            ctx.fill();
+            ctx.fill('evenodd');
         }
     }
 
@@ -168,6 +169,8 @@ class RetroAvatarCropper {
         this.resizeOffset = { x: 0, y: 0 };
         this.previews = [];
         this.previewSizes = [30, 40, 64, 128];
+        this.isZoomFitted = false;
+        this.resizeLockCenter = false;
 
         this.initializeCanvas();
         this.setupEventListeners();
@@ -238,6 +241,13 @@ class RetroAvatarCropper {
         document.getElementById('zoom-in').addEventListener('click', () => this.zoomIn());
         document.getElementById('zoom-out').addEventListener('click', () => this.zoomOut());
         document.getElementById('zoom-fit').addEventListener('click', () => this.fitToScreen());
+        const fitCropBtn = document.getElementById('fit-crop');
+        if (fitCropBtn) fitCropBtn.addEventListener('click', () => this.fitToCrop());
+        const lockBtn = document.getElementById('toggle-lock-center');
+        if (lockBtn) lockBtn.addEventListener('click', () => {
+            this.resizeLockCenter = !this.resizeLockCenter;
+            lockBtn.classList.toggle('toggled', this.resizeLockCenter);
+        });
 
         document.getElementById('rotation-slider').addEventListener('input', (e) => {
             this.rotation = parseInt(e.target.value);
@@ -294,8 +304,22 @@ class RetroAvatarCropper {
         const canvasRect = this.canvas.getBoundingClientRect();
         const scaleX = canvasRect.width / this.image.width;
         const scaleY = canvasRect.height / this.image.height;
-        this.zoom = Math.min(scaleX, scaleY) * 0.8; // Leave some margin
+        this.zoom = Math.min(scaleX, scaleY);
+        this.isZoomFitted = true;
 
+        this.render();
+    }
+
+    fitToCrop() {
+        if (!this.image) return;
+        // Compute zoom so the crop area exactly contains the image content
+        // relative to current canvas. We scale image so that crop width/height
+        // equals the visible projected image area size.
+        const scaleX = this.cropArea.width / this.image.width;
+        const scaleY = this.cropArea.height / this.image.height;
+        // For circle we still use the crop square (width == height), cropArea is square by construction
+        this.zoom = Math.max(scaleX, scaleY);
+        this.isZoomFitted = false;
         this.render();
     }
 
@@ -423,6 +447,12 @@ class RetroAvatarCropper {
                 this.performMove(x, y);
             } else if (this.currentAction === 'resize') {
                 this.performResize(x, y);
+                if (this.resizeLockCenter) {
+                    const centerX = this.cropAreaOrigin.x + this.cropAreaOrigin.width / 2;
+                    const centerY = this.cropAreaOrigin.y + this.cropAreaOrigin.height / 2;
+                    this.cropArea.x = centerX - this.cropArea.width / 2;
+                    this.cropArea.y = centerY - this.cropArea.height / 2;
+                }
             }
             this.constrainCropArea();
             this.render();
@@ -817,8 +847,8 @@ class RetroAvatarCropper {
             y: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.sin(angle2) * canvasSize + canvasSize / 2
         };
 
-        // Create linear gradient across the entire border area
-        const gradient = this.ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+        // Create linear gradient across the entire border area (match original mapping)
+        const gradient = this.ctx.createLinearGradient(p1.x, p2.y, p2.x, p1.y);
 
         // Add color stops from custom gradient
         this.customGradient.gradient.forEach(stop => {
@@ -830,7 +860,7 @@ class RetroAvatarCropper {
         this.ctx.beginPath();
         this.ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
         this.ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
-        this.ctx.fill();
+        this.ctx.fill('evenodd');
     }
 
     drawPresetGradientBorder() {
@@ -878,8 +908,8 @@ class RetroAvatarCropper {
             y: 0.5 / Math.max(Math.abs(Math.cos(angle2)), Math.abs(Math.sin(angle2))) * Math.sin(angle2) * canvasSize + canvasSize / 2
         };
 
-        // Create linear gradient across the entire border area
-        const gradient = this.ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+        // Create linear gradient across the entire border area (match original mapping)
+        const gradient = this.ctx.createLinearGradient(p1.x, p2.y, p2.x, p1.y);
 
         // Add color stops from predefined gradient
         data.gradient.forEach(stop => {
@@ -891,7 +921,7 @@ class RetroAvatarCropper {
         this.ctx.beginPath();
         this.ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
         this.ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
-        this.ctx.fill();
+        this.ctx.fill('evenodd');
     }
 
 
@@ -1403,14 +1433,16 @@ class GradientEditor {
         // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Create gradient
-        const angle = (this.currentGradient.angle * Math.PI) / 180;
-        const x1 = canvas.width / 2 + Math.cos(angle - Math.PI/2) * canvas.width / 2;
-        const y1 = canvas.height / 2 + Math.sin(angle - Math.PI/2) * canvas.height / 2;
-        const x2 = canvas.width / 2 + Math.cos(angle + Math.PI/2) * canvas.width / 2;
-        const y2 = canvas.height / 2 + Math.sin(angle + Math.PI/2) * canvas.height / 2;
-
-        const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+        // Create gradient using same endpoint math as border rendering
+        const a1 = (-270 - this.currentGradient.angle) * Math.PI / 180;
+        const a2 = (-270 - (this.currentGradient.angle + 180)) * Math.PI / 180;
+        const denom1 = Math.max(Math.abs(Math.cos(a1)), Math.abs(Math.sin(a1))) || 1;
+        const denom2 = Math.max(Math.abs(Math.cos(a2)), Math.abs(Math.sin(a2))) || 1;
+        const p1x = canvas.width / 2 + (0.5 / denom1) * Math.cos(a1) * canvas.width;
+        const p1y = canvas.height / 2 + (0.5 / denom1) * Math.sin(a1) * canvas.height;
+        const p2x = canvas.width / 2 + (0.5 / denom2) * Math.cos(a2) * canvas.width;
+        const p2y = canvas.height / 2 + (0.5 / denom2) * Math.sin(a2) * canvas.height;
+        const gradient = ctx.createLinearGradient(p1x, p2y, p2x, p1y);
 
         // Add color stops
         this.currentGradient.stops.forEach(stop => {
