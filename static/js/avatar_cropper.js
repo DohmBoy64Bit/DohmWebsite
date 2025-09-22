@@ -185,10 +185,16 @@ class RetroAvatarCropper {
         const canvasContainer = document.getElementById('cropper-canvas');
         this.canvas = document.getElementById('main-canvas');
 
-        // Set canvas size to container
-        const rect = canvasContainer.getBoundingClientRect();
-        this.canvas.width = rect.width;
-        this.canvas.height = rect.height;
+        // Set canvas size to container content box and account for device pixel ratio
+        const cssW = canvasContainer.clientWidth;
+        const cssH = canvasContainer.clientHeight;
+        this.dpr = window.devicePixelRatio || 1;
+        this.canvas.width = Math.round(cssW * this.dpr);
+        this.canvas.height = Math.round(cssH * this.dpr);
+        this.canvas.style.width = cssW + 'px';
+        this.canvas.style.height = cssH + 'px';
+        this.cssWidth = cssW;
+        this.cssHeight = cssH;
 
         this.ctx = this.canvas.getContext('2d');
         this.ctx.imageSmoothingEnabled = true;
@@ -337,10 +343,8 @@ class RetroAvatarCropper {
 
     fitToScreen() {
         if (!this.image) return;
-
-        const canvasRect = this.canvas.getBoundingClientRect();
-        const scaleX = canvasRect.width / this.image.width;
-        const scaleY = canvasRect.height / this.image.height;
+        const scaleX = (this.cssWidth || this.canvas.width) / this.image.width;
+        const scaleY = (this.cssHeight || this.canvas.height) / this.image.height;
         this.zoom = Math.min(scaleX, scaleY);
         this.isZoomFitted = true;
 
@@ -363,17 +367,19 @@ class RetroAvatarCropper {
     centerCrop() {
         if (!this.image) return;
 
-        const centerX = this.canvas.width / 2;
-        const centerY = this.canvas.height / 2;
-        const size = Math.min(this.canvas.width, this.canvas.height) * 0.4;
+        const centerX = (this.cssWidth || this.canvas.width) / 2;
+        const centerY = (this.cssHeight || this.canvas.height) / 2;
+        const currentW = this.cropArea.width;
+        const currentH = this.cropArea.height;
 
         this.cropArea = {
-            x: centerX - size / 2,
-            y: centerY - size / 2,
-            width: size,
-            height: size
+            x: centerX - currentW / 2,
+            y: centerY - currentH / 2,
+            width: currentW,
+            height: currentH
         };
 
+        this.constrainCropArea();
         this.render();
     }
 
@@ -744,21 +750,27 @@ class RetroAvatarCropper {
     }
 
     constrainCropArea() {
-        this.cropArea.x = Math.max(0, Math.min(this.canvas.width - this.cropArea.width, this.cropArea.x));
-        this.cropArea.y = Math.max(0, Math.min(this.canvas.height - this.cropArea.height, this.cropArea.y));
+        const w = this.cssWidth || this.canvas.width;
+        const h = this.cssHeight || this.canvas.height;
+        this.cropArea.x = Math.max(0, Math.min(w - this.cropArea.width, this.cropArea.x));
+        this.cropArea.y = Math.max(0, Math.min(h - this.cropArea.height, this.cropArea.y));
     }
 
     render() {
         if (!this.image) return;
 
-        // Clear canvas
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // Normalize to CSS pixel space using DPR, then clear in CSS pixels
+        const dpr = this.dpr || window.devicePixelRatio || 1;
+        const cssW = this.cssWidth || this.canvas.width;
+        const cssH = this.cssHeight || this.canvas.height;
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        this.ctx.clearRect(0, 0, cssW, cssH);
 
         // Save context
         this.ctx.save();
 
-        // Move to center for rotation
-        this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
+        // Move to center for rotation in CSS pixels
+        this.ctx.translate(cssW / 2, cssH / 2);
         this.ctx.rotate(this.rotation * Math.PI / 180);
         const scaleX = (this.isFlippedX ? -1 : 1) * this.zoom;
         const scaleY = (this.isFlippedY ? -1 : 1) * this.zoom;
@@ -780,8 +792,10 @@ class RetroAvatarCropper {
 
     drawCropOverlay() {
         // Dark overlay
+        const cssW = this.cssWidth || this.canvas.width;
+        const cssH = this.cssHeight || this.canvas.height;
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillRect(0, 0, cssW, cssH);
 
         // Clear crop area
         this.ctx.save();
@@ -837,31 +851,27 @@ class RetroAvatarCropper {
     }
 
     drawBorder() {
-        const centerX = this.cropArea.x + this.cropArea.width / 2;
-        const centerY = this.cropArea.y + this.cropArea.height / 2;
-        const cropRadius = this.cropArea.width / 2;
+        // Render the border using the same pipeline as previews/download for 1:1 parity
+        const dpr = this.dpr || window.devicePixelRatio || 1;
+        const size = Math.max(1, Math.round(this.cropArea.width));
+        const off = document.createElement('canvas');
+        off.width = Math.round(size * dpr);
+        off.height = Math.round(size * dpr);
 
-        if (this.borderType === 'solid') {
-            // Draw border inward - create a ring from crop edge inward
-            this.ctx.fillStyle = this.borderColor;
-            if (this.cropShape === 'square') {
-                const inset = this.cropArea.width * this.borderSize;
-                this.ctx.beginPath();
-                this.ctx.rect(this.cropArea.x, this.cropArea.y, this.cropArea.width, this.cropArea.height);
-                this.ctx.rect(this.cropArea.x + inset, this.cropArea.y + inset, this.cropArea.width - inset * 2, this.cropArea.height - inset * 2);
-                this.ctx.fill('evenodd');
-            } else {
-                const borderRadius = cropRadius * (1 - this.borderSize);
-                this.ctx.beginPath();
-                this.ctx.arc(centerX, centerY, cropRadius, 0, 2 * Math.PI);
-                this.ctx.arc(centerX, centerY, borderRadius, 0, 2 * Math.PI, true);
-                this.ctx.fill();
-            }
-        } else if (this.borderType === 'custom' && this.customGradient) {
-            this.drawCustomGradientBorder();
-        } else if (this.borderType === 'retro' || this.borderType === 'rgb') {
-            this.drawPresetGradientBorder();
+        // Sync static settings used by the shared border renderer
+        RetroAvatarCropper.borderType = this.borderType;
+        RetroAvatarCropper.borderSize = this.borderSize;
+        RetroAvatarCropper.borderColor = this.borderColor;
+        RetroAvatarCropper.shape = this.cropShape;
+        if (this.borderType === 'custom' && this.customGradient) {
+            RetroAvatarCropper.customGradient = this.customGradient;
         }
+
+        // Draw ring onto offscreen canvas
+        RetroAvatarCropper.applyBorder(off);
+
+        // Composite onto the main canvas at the crop position
+        this.ctx.drawImage(off, this.cropArea.x, this.cropArea.y, this.cropArea.width, this.cropArea.height);
     }
 
     drawCustomGradientBorder() {
@@ -990,16 +1000,23 @@ class RetroAvatarCropper {
     handleResize() {
         const container = document.getElementById('cropper-canvas');
         if (!container || !this.canvas) return;
-        const rect = container.getBoundingClientRect();
-        const prevW = this.canvas.width || 1;
-        const prevH = this.canvas.height || 1;
-        const scaleX = rect.width / prevW;
-        const scaleY = rect.height / prevH;
+        const cssW = container.clientWidth;
+        const cssH = container.clientHeight;
+
+        const prevW = this.cssWidth || this.canvas.width || 1;
+        const prevH = this.cssHeight || this.canvas.height || 1;
+        const scaleX = cssW / prevW;
+        const scaleY = cssH / prevH;
         const uniform = Math.min(scaleX, scaleY);
 
-        // Update canvas size
-        this.canvas.width = rect.width;
-        this.canvas.height = rect.height;
+        // Update canvas size with DPR and remember CSS size
+        this.dpr = window.devicePixelRatio || 1;
+        this.canvas.width = Math.round(cssW * this.dpr);
+        this.canvas.height = Math.round(cssH * this.dpr);
+        this.canvas.style.width = cssW + 'px';
+        this.canvas.style.height = cssH + 'px';
+        this.cssWidth = cssW;
+        this.cssHeight = cssH;
 
         // Keep crop area shape by uniform scaling around its center
         const centerX = this.cropArea.x + this.cropArea.width / 2;
@@ -1033,8 +1050,8 @@ class RetroAvatarCropper {
             // 3. Apply inverse rotation
             // 4. Add back the image centering
 
-            const canvasCenterX = this.canvas.width / 2;
-            const canvasCenterY = this.canvas.height / 2;
+            const canvasCenterX = (this.cssWidth || this.canvas.width) / 2;
+            const canvasCenterY = (this.cssHeight || this.canvas.height) / 2;
             const imageCenterX = this.image.width / 2;
             const imageCenterY = this.image.height / 2;
 
@@ -1128,8 +1145,8 @@ class RetroAvatarCropper {
         // 3. Apply inverse rotation
         // 4. Add back the image centering
 
-        const canvasCenterX = this.canvas.width / 2;
-        const canvasCenterY = this.canvas.height / 2;
+        const canvasCenterX = (this.cssWidth || this.canvas.width) / 2;
+        const canvasCenterY = (this.cssHeight || this.canvas.height) / 2;
         const imageCenterX = this.image.width / 2;
         const imageCenterY = this.image.height / 2;
 
