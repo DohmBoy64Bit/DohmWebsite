@@ -161,7 +161,12 @@ after 24 hours.{% endblock %}
             const data = await response.json();
 
             if (data.success) {
-                showModal(window.location.origin + data.url);
+                // Check if URL is absolute (http/https)
+                let finalUrl = data.url;
+                if (!finalUrl.startsWith('http')) {
+                    finalUrl = window.location.origin + finalUrl;
+                }
+                showModal(finalUrl);
             } else {
                 alert('DEPLOYMENT FAILURE: ' + (data.error || 'UNKNOWN ERROR'));
             }

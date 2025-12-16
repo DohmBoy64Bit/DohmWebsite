@@ -1,6 +1,10 @@
-from flask import Blueprint, render_template, request, jsonify, abort
+import os
+from flask import Blueprint, render_template, request, jsonify, abort, redirect
 from services.temp_site_service import TempSiteService
 from utils.logging_config import app_logger as logger
+
+# Get Content Domain from env or default
+CONTENT_DOMAIN = os.environ.get('CONTENT_DOMAIN', 'www.content.dohmboy64.com')
 
 temp_site = Blueprint('temp_site', __name__)
 
@@ -27,10 +31,11 @@ def create_site():
             
         site_id = TempSiteService.create_site(html, css, js)
         
+        # Return absolute URL to content domain
         return jsonify({
             'success': True,
             'id': site_id,
-            'url': f"/temp/view/{site_id}"
+            'url': f"https://{CONTENT_DOMAIN}/temp/view/{site_id}"
         })
         
     except Exception as e:
@@ -40,6 +45,11 @@ def create_site():
 @temp_site.route('/temp/view/<site_id>')
 def view_site(site_id):
     """Render the temporary site."""
+    # Security: Redirect to content domain if not on it (and not localhost)
+    if 'localhost' not in request.host and '127.0.0.1' not in request.host:
+        if request.host != CONTENT_DOMAIN:
+            return redirect(f"https://{CONTENT_DOMAIN}/temp/view/{site_id}", code=301)
+
     site = TempSiteService.get_site(site_id)
     
     if not site:
