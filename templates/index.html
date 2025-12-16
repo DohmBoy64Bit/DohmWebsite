@@ -2,19 +2,23 @@
 
 {% block title %}DOHMBOY64 - Retro Gaming Tools & Chrome Extensions | Home{% endblock %}
 
-{% block meta_description %}DOHMBOY64 homepage - Play The Simpsons arcade game, access Chrome extension downloader, URL shortener, image hosting API, and explore open source projects.{% endblock %}
+{% block meta_description %}DOHMBOY64 homepage - Play The Simpsons arcade game, access Chrome extension downloader, URL
+shortener, image hosting API, and explore open source projects.{% endblock %}
 
-{% block meta_keywords %}dohmboy64, retro gaming, chrome extension downloader, url shortener, the simpsons arcade, holy potatoes editor, photo deputy, retro tools, 90s nostalgia, arcade games, web tools, dohmboy64 tools{% endblock %}
+{% block meta_keywords %}dohmboy64, retro gaming, chrome extension downloader, url shortener, the simpsons arcade, holy
+potatoes editor, photo deputy, retro tools, 90s nostalgia, arcade games, web tools, dohmboy64 tools{% endblock %}
 
 {% block og_title %}DOHMBOY64 - Retro Gaming Tools & Chrome Extensions{% endblock %}
 
-{% block og_description %}Welcome to DOHMBOY64 - Your retro gaming paradise with free tools, Chrome extension downloads, URL shortener, and classic arcade games. Experience 90s nostalgia with modern web tools.{% endblock %}
+{% block og_description %}Welcome to DOHMBOY64 - Your retro gaming paradise with free tools, Chrome extension downloads,
+URL shortener, and classic arcade games. Experience 90s nostalgia with modern web tools.{% endblock %}
 
 {% block og_image %}{{ url_for('static', filename='assets/logo.png', _external=True) }}{% endblock %}
 
 {% block twitter_title %}DOHMBOY64 - Retro Gaming Tools & Extensions{% endblock %}
 
-{% block twitter_description %}Retro gaming paradise with free tools, Chrome extensions, URL shortener, and classic arcade games. 90s nostalgia meets modern web tools.{% endblock %}
+{% block twitter_description %}Retro gaming paradise with free tools, Chrome extensions, URL shortener, and classic
+arcade games. 90s nostalgia meets modern web tools.{% endblock %}
 
 {% block twitter_image %}{{ url_for('static', filename='assets/logo.png', _external=True) }}{% endblock %}
 
@@ -443,28 +447,28 @@
 
     .retro-button.pressed {
         transform: translateY(2px);
-        box-shadow: 
-            inset 0 2px 5px rgba(0,0,0,0.5),
-            inset 0 0 20px rgba(255,140,0,0.3),
-            0 0 15px rgba(255,140,0,0.5),
-            0 2px 4px rgba(0,0,0,0.3);
+        box-shadow:
+            inset 0 2px 5px rgba(0, 0, 0, 0.5),
+            inset 0 0 20px rgba(255, 140, 0, 0.3),
+            0 0 15px rgba(255, 140, 0, 0.5),
+            0 2px 4px rgba(0, 0, 0, 0.3);
         background: #1a1a1a;
         border-color: #ff8c00;
-        text-shadow: 
-            0 0 5px rgba(255,140,0,0.8),
-            0 0 10px rgba(255,140,0,0.5);
+        text-shadow:
+            0 0 5px rgba(255, 140, 0, 0.8),
+            0 0 10px rgba(255, 140, 0, 0.5);
         color: #ff8c00;
     }
 
     .retro-button.pressed:hover {
-        box-shadow: 
-            inset 0 2px 5px rgba(0,0,0,0.5),
-            inset 0 0 25px rgba(255,140,0,0.4),
-            0 0 20px rgba(255,140,0,0.6),
-            0 2px 4px rgba(0,0,0,0.3);
-        text-shadow: 
-            0 0 8px rgba(255,140,0,0.9),
-            0 0 15px rgba(255,140,0,0.6);
+        box-shadow:
+            inset 0 2px 5px rgba(0, 0, 0, 0.5),
+            inset 0 0 25px rgba(255, 140, 0, 0.4),
+            0 0 20px rgba(255, 140, 0, 0.6),
+            0 2px 4px rgba(0, 0, 0, 0.3);
+        text-shadow:
+            0 0 8px rgba(255, 140, 0, 0.9),
+            0 0 15px rgba(255, 140, 0, 0.6);
     }
 
     .dropdown-content {
@@ -477,15 +481,15 @@
         background: #1a1a1a;
         /* Option 1: Wider dropdown (commented out for now) */
         /* min-width: 300px; */
-        
+
         /* Option 2: Original width with smaller font (currently used) */
         min-width: 200px;
-        
+
         border: 2px solid #ff8c00;
         border-radius: 5px;
-        box-shadow: 
-            0 0 20px rgba(255,140,0,0.3),
-            inset 0 0 10px rgba(255,140,0,0.1);
+        box-shadow:
+            0 0 20px rgba(255, 140, 0, 0.3),
+            inset 0 0 10px rgba(255, 140, 0, 0.1);
         z-index: 100;
         animation: dropdownAppear 0.3s ease-out;
     }
@@ -536,6 +540,7 @@
             opacity: 0;
             transform: translateX(-50%) translateY(-10px);
         }
+
         to {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
@@ -557,26 +562,42 @@
     <div class="tools-dropdown">
         <button class="retro-button" onclick="toggleDropdown(this, 'code-dropdown')">CODE</button>
         <div class="dropdown-content" id="code-dropdown">
-            <a href="https://github.com/NomadWithoutAHome/HolyPotatoEditor" class="dropdown-item" title="Holy Potatoes Game Editor">Holy Potatoes Editor</a>
-            <a href="https://github.com/NomadWithoutAHome/PhotoDeputy" class="dropdown-item" title="Photo Management Tool">Photo Deputy</a>
-            <a href="https://github.com/NomadWithoutAHome/AncestorAPI" class="dropdown-item" title="Family Tree API">Ancestor API</a>
-            <a href="https://github.com/NomadWithoutAHome/GhostbustersRemasteredSMPSmasher" class="dropdown-item" title="Audio Processing Tool">SMP Smasher</a>
-            <a href="https://github.com/NomadWithoutAHome/XenonRecomp-Binarys" class="dropdown-item" title="Xenon Recompilation Tools">XenonRecomp Binarys</a>
-	    <a href="https://github.com/NomadWithoutAHome/EmbedPy" class="dropdown-item" title="Python Embedding Tool">EmbedPy Steno Tool</a>
-            <a href="https://github.com/NomadWithoutAHome/RFC-Extractor" class="dropdown-item" title="RFC Document Extractor">RFC Extractor</a>
-			<a href="https://github.com/NomadWithoutAHome/img2pix" class="dropdown-item" title="Image to Pixel Art Converter">IMG 2 Pixel Art</a>
-			<a href="https://github.com/DohmBoy64Bit/RecipeGenerator" class="dropdown-item" title="Grow a Garden Recipe Generator">Grow a Garden Recipe Generator</a>
+            <a href="https://github.com/NomadWithoutAHome/HolyPotatoEditor" class="dropdown-item"
+                title="Holy Potatoes Game Editor">Holy Potatoes Editor</a>
+            <a href="https://github.com/NomadWithoutAHome/PhotoDeputy" class="dropdown-item"
+                title="Photo Management Tool">Photo Deputy</a>
+            <a href="https://github.com/NomadWithoutAHome/AncestorAPI" class="dropdown-item"
+                title="Family Tree API">Ancestor API</a>
+            <a href="https://github.com/NomadWithoutAHome/GhostbustersRemasteredSMPSmasher" class="dropdown-item"
+                title="Audio Processing Tool">SMP Smasher</a>
+            <a href="https://github.com/NomadWithoutAHome/XenonRecomp-Binarys" class="dropdown-item"
+                title="Xenon Recompilation Tools">XenonRecomp Binarys</a>
+            <a href="https://github.com/NomadWithoutAHome/EmbedPy" class="dropdown-item"
+                title="Python Embedding Tool">EmbedPy Steno Tool</a>
+            <a href="https://github.com/NomadWithoutAHome/RFC-Extractor" class="dropdown-item"
+                title="RFC Document Extractor">RFC Extractor</a>
+            <a href="https://github.com/NomadWithoutAHome/img2pix" class="dropdown-item"
+                title="Image to Pixel Art Converter">IMG 2 Pixel Art</a>
+            <a href="https://github.com/DohmBoy64Bit/RecipeGenerator" class="dropdown-item"
+                title="Grow a Garden Recipe Generator">Grow a Garden Recipe Generator</a>
             <a href="#" class="dropdown-item">More Projects Soon...</a>
         </div>
     </div>
     <div class="tools-dropdown">
         <button class="retro-button" onclick="toggleDropdown(this, 'tools-dropdown')">TOOLS</button>
         <div class="dropdown-content" id="tools-dropdown">
-            <a href="{{ url_for('pages.chrome_downloader') }}" class="dropdown-item" title="Download Chrome Extensions">Chrome Extension Downloader</a>
-            <a href="{{ url_for('shortener.url_shortener_page') }}" class="dropdown-item" title="Create Short URLs">URL Shortener</a>
-            <a href="{{ url_for('image_routes.image_uploader_page') }}" class="dropdown-item" title="Upload Images via API">Image Uploader</a>
-            <a href="{{ url_for('pages.avatar_cropper') }}" class="dropdown-item" title="Create Retro Avatars">Avatar Cropper</a>
-			<a href="https://www.growrecipes.dohmboy64.com" class="dropdown-item" title="Grow a Garden Recipe Generator">Grow a Garden Recipe Generator</a>
+            <a href="{{ url_for('pages.chrome_downloader') }}" class="dropdown-item"
+                title="Download Chrome Extensions">Chrome Extension Downloader</a>
+            <a href="{{ url_for('temp_site.creator_interface') }}" class="dropdown-item"
+                title="Create Temporary Microsites">TempSite Generator</a>
+            <a href="{{ url_for('shortener.url_shortener_page') }}" class="dropdown-item" title="Create Short URLs">URL
+                Shortener</a>
+            <a href="{{ url_for('image_routes.image_uploader_page') }}" class="dropdown-item"
+                title="Upload Images via API">Image Uploader</a>
+            <a href="{{ url_for('pages.avatar_cropper') }}" class="dropdown-item" title="Create Retro Avatars">Avatar
+                Cropper</a>
+            <a href="https://www.growrecipes.dohmboy64.com" class="dropdown-item"
+                title="Grow a Garden Recipe Generator">Grow a Garden Recipe Generator</a>
             <a href="#" class="dropdown-item">More Tools Coming Soon...</a>
         </div>
     </div>
