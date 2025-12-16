@@ -66,20 +66,10 @@ after 24 hours.{% endblock %}
     <p class="text-2xl text-green-400">CREATE. SHARE. DESTROY. (EXPIRES IN 24H)</p>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+<div class="max-w-6xl mx-auto mb-12">
     <div>
-        <label class="terminal-label">HTML STRUCTURE</label>
-        <textarea id="html-code" name="html-code" placeholder="<!-- Enter HTML here -->"></textarea>
-    </div>
-
-    <div>
-        <label class="terminal-label">CSS STYLING</label>
-        <textarea id="css-code" name="css-code" placeholder="/* Enter CSS here */"></textarea>
-    </div>
-
-    <div>
-        <label class="terminal-label">JAVASCRIPT LOGIC</label>
-        <textarea id="js-code" name="js-code" placeholder="// Enter JS here"></textarea>
+        <label class="terminal-label">CODE EDITOR (HTML/CSS/JS)</label>
+        <textarea id="html-code" name="html-code" placeholder="<!-- Enter your code here -->"></textarea>
     </div>
 </div>
 
@@ -114,7 +104,7 @@ after 24 hours.{% endblock %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
 <script>
-    // Initialize CodeMirror editors
+    // Initialize CodeMirror editor
     var htmlEditor = CodeMirror.fromTextArea(document.getElementById("html-code"), {
         mode: "htmlmixed",
         theme: "midnight",
@@ -122,31 +112,34 @@ after 24 hours.{% endblock %}
         lineWrapping: true
     });
 
-    var cssEditor = CodeMirror.fromTextArea(document.getElementById("css-code"), {
-        mode: "css",
-        theme: "matrix",
-        lineNumbers: true,
-        lineWrapping: true
-    });
-
-    var jsEditor = CodeMirror.fromTextArea(document.getElementById("js-code"), {
-        mode: "javascript",
-        theme: "matrix",
-        lineNumbers: true,
-        lineWrapping: true
-    });
+    // Set bigger height for single editor
+    htmlEditor.setSize(null, 600);
 
     // Set default content
-    htmlEditor.setValue('<!-- Enter HTML here -->\n<h1>Hello World</h1>');
-    cssEditor.setValue('/* Enter CSS here */\nh1 { color: #f00; }');
-    jsEditor.setValue('// Enter JS here\nconsole.log("Ready");');
+    htmlEditor.setValue(`<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; }
+        h1 { color: #f0f; text-shadow: 0 0 5px #f0f; }
+    </style>
+</head>
+<body>
+    <h1>SYSTEM ONLINE</h1>
+    <p>Enter your code here...</p>
+    <script>
+        console.log("Ready");
+    <\/script>
+</body>
+</html>`);
 
     async function deploySite() {
         const html = htmlEditor.getValue();
-        const css = cssEditor.getValue();
-        const js = jsEditor.getValue();
+        // Send empty strings for separate CSS/JS
+        const css = "";
+        const js = "";
 
-        if (!html && !css && !js) {
+        if (!html) {
             alert('INPUT ERROR: PROVIDE DATA BEFORE DEPLOYMENT');
             return;
         }
