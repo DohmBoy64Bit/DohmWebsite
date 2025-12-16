@@ -2,19 +2,25 @@
 
 {% block title %}Chrome Extension Downloader - Free CRX & ZIP Downloads | DOHMBOY64{% endblock %}
 
-{% block meta_description %}Free Chrome extension downloader tool for developers and users. Download any Chrome extension in CRX or ZIP format instantly with URL or ID support. Backup, save, and convert extensions easily. No registration required.{% endblock %}
+{% block meta_description %}Free Chrome extension downloader tool for developers and users. Download any Chrome
+extension in CRX or ZIP format instantly with URL or ID support. Backup, save, and convert extensions easily. No
+registration required.{% endblock %}
 
-{% block meta_keywords %}chrome extension downloader, crx downloader, chrome extension to zip, extension backup, chrome web store, chrome extension download, crx file download, chrome extension backup, free extension downloader, dohmboy64{% endblock %}
+{% block meta_keywords %}chrome extension downloader, crx downloader, chrome extension to zip, extension backup, chrome
+web store, chrome extension download, crx file download, chrome extension backup, free extension downloader, dohmboy64{%
+endblock %}
 
 {% block og_title %}Chrome Extension Downloader - Free CRX & ZIP Downloads{% endblock %}
 
-{% block og_description %}Download any Chrome extension in CRX or ZIP format instantly. Free tool to backup and save Chrome extensions from the Chrome Web Store. No signup required.{% endblock %}
+{% block og_description %}Download any Chrome extension in CRX or ZIP format instantly. Free tool to backup and save
+Chrome extensions from the Chrome Web Store. No signup required.{% endblock %}
 
 {% block og_image %}{{ url_for('static', filename='assets/logo.png', _external=True) }}{% endblock %}
 
 {% block twitter_title %}Chrome Extension Downloader - Free CRX Downloads | DOHMBOY64{% endblock %}
 
-{% block twitter_description %}Download Chrome extensions in CRX or ZIP format instantly. Free extension backup tool with URL and ID support.{% endblock %}
+{% block twitter_description %}Download Chrome extensions in CRX or ZIP format instantly. Free extension backup tool
+with URL and ID support.{% endblock %}
 
 {% block twitter_image %}{{ url_for('static', filename='assets/logo.png', _external=True) }}{% endblock %}
 
@@ -300,14 +306,16 @@
 {% block content %}
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-4xl mb-8 text-center text-white font-vt323">Chrome Extension Tools</h1>
-    
+
     <div class="grid grid-cols-1 gap-8">
         <!-- Download Section -->
         <div class="bg-gray-800 p-6 rounded-lg border-2 border-orange-500 shadow-lg">
             <form id="extension-form" class="flex flex-col items-center max-w-2xl mx-auto">
                 <div class="text-center w-full">
-                    <label for="extension-url" class="block text-2xl mb-4 font-vt323 text-white">Chrome Web Store URL or Extension ID:</label>
-                    <input type="text" id="extension-url" name="extension-url" class="retro-input w-full" placeholder="Enter Chrome Web Store URL or Extension ID">
+                    <label for="extension-url" class="block text-2xl mb-4 font-vt323 text-white">Chrome Web Store URL or
+                        Extension ID:</label>
+                    <input type="text" id="extension-url" name="extension-url" class="retro-input w-full"
+                        placeholder="Enter Chrome Web Store URL or Extension ID">
                 </div>
 
                 <div class="flex justify-center gap-8 mb-6">
@@ -327,6 +335,25 @@
             </form>
         </div>
 
+        <!-- TempSite Generator -->
+        <div class="bg-gray-800 p-6 rounded-lg border-2 border-green-500 shadow-lg mt-8">
+            <h2 class="text-3xl mb-4 font-vt323 text-green-400">TempSite Generator</h2>
+            <p class="mb-4 text-white">Create instant temporary webpages using HTML, CSS, and JS. Perfect for testing
+                code or sharing quick snippets. All sites self-destruct after 24 hours.</p>
+
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="space-y-2">
+                    <div class="flex items-center text-green-300">
+                        <span class="mr-2">✓</span> <span>Support for HTML5, CSS3, ES6+</span>
+                    </div>
+                    <div class="flex items-center text-green-300">
+                        <span class="mr-2">✓</span> <span>Instant Deployment</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('temp_site.creator_interface') }}" class="retro-button text-xl">LAUNCH GENERATOR</a>
+            </div>
+        </div>
+
         <!-- Help Section -->
         <div class="bg-gray-800 p-6 rounded-lg border-2 border-orange-500 shadow-lg">
             <h2 class="text-2xl mb-4 font-vt323">Help</h2>
@@ -335,7 +362,9 @@
                 <li>Go to the Chrome Web Store</li>
                 <li>Find the extension you want to download</li>
                 <li>The ID is the long string of letters in the URL</li>
-                <li>Example: https://chrome.google.com/webstore/detail/extension-name/<strong>abcdefghijklmnopqrstuvwxyz123456</strong></li>
+                <li>Example:
+                    https://chrome.google.com/webstore/detail/extension-name/<strong>abcdefghijklmnopqrstuvwxyz123456</strong>
+                </li>
             </ol>
         </div>
     </div>

@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}TempSite Generator | DOHMBOY64{% endblock %}
+{% block meta_description %}Create temporary web pages instantly with HTML, CSS, and JS. Sites expire automatically
+after 24 hours.{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/midnight.min.css">
+<style>
+    .CodeMirror {
+        height: 300px;
+        border: 2px solid #f97316;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 14px;
+        margin-bottom: 1rem;
+    }
+
+    .CodeMirror-focused {
+        box-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
+        border-color: #fbbf24;
+    }
+
+    .terminal-label {
+        color: #fbbf24;
+        font-family: 'VT323', monospace;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        display: block;
+        text-shadow: 0 0 5px #f97316;
+    }
+
+    .success-modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #000;
+        border: 4px solid #0f0;
+        padding: 2rem;
+        z-index: 1000;
+        box-shadow: 0 0 50px rgba(0, 255, 0, 0.5);
+        text-align: center;
+        max-width: 90%;
+        width: 500px;
+    }
+
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 999;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="text-center mb-12">
+    <h1 class="text-6xl text-yellow-500 mb-4" style="text-shadow: 0 0 20px #f97316;">TEMPSITE GENERATOR</h1>
+    <p class="text-2xl text-green-400">CREATE. SHARE. DESTROY. (EXPIRES IN 24H)</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+    <div>
+        <label class="terminal-label">HTML STRUCTURE</label>
+        <textarea id="html-code" name="html-code" placeholder="<!-- Enter HTML here -->"></textarea>
+    </div>
+
+    <div>
+        <label class="terminal-label">CSS STYLING</label>
+        <textarea id="css-code" name="css-code" placeholder="/* Enter CSS here */"></textarea>
+    </div>
+
+    <div>
+        <label class="terminal-label">JAVASCRIPT LOGIC</label>
+        <textarea id="js-code" name="js-code" placeholder="// Enter JS here"></textarea>
+    </div>
+</div>
+
+<div class="text-center">
+    <button onclick="deploySite()" class="retro-button text-3xl px-12 py-4">
+        INITIATE DEPLOYMENT
+    </button>
+</div>
+
+<!-- Result Modal -->
+<div id="modal-overlay" class="modal-overlay"></div>
+<div id="success-modal" class="success-modal">
+    <h2 class="text-4xl text-green-500 mb-6">DEPLOYMENT SUCCESSFUL</h2>
+    <p class="text-xl text-white mb-4">YOUR TEMPORARY UPLINK IS READY:</p>
+
+    <div class="bg-gray-900 p-4 border border-green-500 mb-6 break-all">
+        <a id="site-url" href="#" target="_blank" class="text-yellow-400 hover:text-yellow-200 text-xl"></a>
+    </div>
+
+    <div class="flex justify-center space-x-4">
+        <button onclick="copyUrl()" class="retro-button text-xl">COPY URL</button>
+        <button onclick="closeModal()" class="retro-button text-xl">CLOSE</button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+<script>
+    // Initialize CodeMirror editors
+    var htmlEditor = CodeMirror.fromTextArea(document.getElementById("html-code"), {
+        mode: "htmlmixed",
+        theme: "midnight",
+        lineNumbers: true,
+        lineWrapping: true
+    });
+
+    var cssEditor = CodeMirror.fromTextArea(document.getElementById("css-code"), {
+        mode: "css",
+        theme: "matrix",
+        lineNumbers: true,
+        lineWrapping: true
+    });
+
+    var jsEditor = CodeMirror.fromTextArea(document.getElementById("js-code"), {
+        mode: "javascript",
+        theme: "matrix",
+        lineNumbers: true,
+        lineWrapping: true
+    });
+
+    // Set default content
+    htmlEditor.setValue('<!-- Enter HTML here -->\n<h1>Hello World</h1>');
+    cssEditor.setValue('/* Enter CSS here */\nh1 { color: #f00; }');
+    jsEditor.setValue('// Enter JS here\nconsole.log("Ready");');
+
+    async function deploySite() {
+        const html = htmlEditor.getValue();
+        const css = cssEditor.getValue();
+        const js = jsEditor.getValue();
+
+        if (!html && !css && !js) {
+            alert('INPUT ERROR: PROVIDE DATA BEFORE DEPLOYMENT');
+            return;
+        }
+
+        const btn = document.querySelector('button[onclick="deploySite()"]');
+        const originalText = btn.innerText;
+        btn.innerText = 'UPLOADING...';
+        btn.disabled = true;
+
+        try {
+            const response = await fetch('/api/temp-site/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ html, css, js })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showModal(window.location.origin + data.url);
+            } else {
+                alert('DEPLOYMENT FAILURE: ' + (data.error || 'UNKNOWN ERROR'));
+            }
+        } catch (e) {
+            alert('SYSTEM ERROR: CONNECTION LOST');
+            console.error(e);
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    function showModal(url) {
+        document.getElementById('site-url').href = url;
+        document.getElementById('site-url').innerText = url;
+        document.getElementById('modal-overlay').style.display = 'block';
+        document.getElementById('success-modal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('modal-overlay').style.display = 'none';
+        document.getElementById('success-modal').style.display = 'none';
+    }
+
+    function copyUrl() {
+        const url = document.getElementById('site-url').innerText;
+        navigator.clipboard.writeText(url).then(() => {
+            const btn = document.querySelector('button[onclick="copyUrl()"]');
+            const original = btn.innerText;
+            btn.innerText = 'COPIED!';
+            setTimeout(() => btn.innerText = original, 2000);
+        });
+    }
+</script>
+{% endblock %}

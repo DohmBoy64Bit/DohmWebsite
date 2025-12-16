@@ -24,6 +24,8 @@ app.register_blueprint(pages)
 app.register_blueprint(crx)
 app.register_blueprint(shortener)
 app.register_blueprint(image_routes)
+from routes.temp_site_routes import temp_site
+app.register_blueprint(temp_site)
 #app.register_blueprint(pdf_converter)
 #app.register_blueprint(bbs)
 
