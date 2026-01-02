@@ -61,6 +61,11 @@ def avatar_cropper():
     """Render the Avatar Cropper page."""
     return render_template('avatar_cropper.html')
 
+@pages.route('/tools/elephant-calculator')
+def elephant_calculator():
+    """Render the Elephant Calculator page."""
+    return render_template('elecalc.html')
+
 @pages.route('/play')
 def play():
     """Render the emulator page."""
