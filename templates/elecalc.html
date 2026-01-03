@@ -435,6 +435,77 @@
                 padding: 20px;
             }
         }
+
+        /* Simple CSS Tooltip */
+        .tooltip {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dotted var(--dark-green);
+        }
+
+        .tooltip:before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 8px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+        }
+
+        .tooltip:after {
+            /* Triangle */
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.85);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            margin-bottom: -4px;
+        }
+
+        .tooltip:hover:before,
+        .tooltip:hover:after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        /* Help Badge (?) */
+        .help-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: var(--sun-yellow);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            margin-left: 6px;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: 800;
+            vertical-align: middle;
+        }
     </style>
 </head>
 
@@ -460,7 +531,7 @@
                         <div class="input-group">
                             <label><i class="fas fa-weight-hanging"
                                     style="color: var(--wood-dark); margin-right: 8px;"></i> Starting Base
-                                Weight</label>
+                                Weight <span class="help-badge tooltip" data-tooltip="Weight at age 1">?</span></label>
                             <div class="input-wrapper">
                                 <input type="range" id="startingBaseSlider" min="0" max="3.4" step="0.1" value="2.0">
                                 <input type="number" id="startingBase" min="0" max="3.4" step="0.1" value="2.0">
@@ -470,7 +541,10 @@
 
                         <div class="input-group">
                             <label><i class="fas fa-stopwatch"
-                                    style="color: var(--flower-pink); margin-right: 8px;"></i> Minutes per Run</label>
+                                    style="color: var(--flower-pink); margin-right: 8px;"></i>
+                                Minutes per Run <span class="help-badge tooltip"
+                                    data-tooltip="Time it takes to reach Level 50">?</span>
+                            </label>
                             <div class="input-wrapper">
                                 <input type="range" id="minutesPerRunSlider" min="1" max="60" value="15">
                                 <input type="number" id="minutesPerRun" min="1" max="999" value="15">
