@@ -670,9 +670,13 @@
             // Update Explanation
             const elMath = document.getElementById('mathExplanation');
             elMath.innerHTML = `
-                How we calculate it: <br>
-                You need <strong>${baseNeeded.toFixed(1)} kg</strong> more to reach the 3.5 kg elephant limit. <br>
-                At <strong>0.1 kg</strong> per run, that takes <strong>${runsNeeded} runs</strong>!
+                <strong>Step-by-Step Calculation:</strong>
+                <div style="margin-top: 8px; line-height: 1.6;">
+                    1. <strong>Goal:</strong> 3.5 kg (Max) - ${startBase.toFixed(1)} kg (Current) = <strong>${baseNeeded.toFixed(1)} kg</strong> needed.<br>
+                    2. <strong>Runs:</strong> ${baseNeeded.toFixed(1)} kg ÷ 0.1 kg per run = <strong>${runsNeeded} runs</strong>.<br>
+                    3. <strong>Time:</strong> ${runsNeeded} runs × ${minsPerRun} mins = <strong>${(runsNeeded * minsPerRun).toLocaleString()} mins</strong>.<br>
+                    4. <strong>Formula:</strong> (3.5 - ${startBase.toFixed(1)}) ÷ 0.1 = <strong>${runsNeeded} Runs</strong>
+                </div>
             `;
         }
 
