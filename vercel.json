@@ -8,6 +8,10 @@
         {
             "src": "static/**",
             "use": "@vercel/static"
+        },
+        {
+            "src": "sites/recomphamr/**",
+            "use": "@vercel/static"
         }
     ],
     "routes": [

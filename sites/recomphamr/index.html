@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RecompHamr — Local-first RE coding agent</title>
+  <meta name="description" content="RecompHamr is a local-first terminal coding agent for reverse engineering, decompilation, static recompilation, and unfamiliar native-code projects." />
+  <meta name="theme-color" content="#ff7a18" />
+  <meta property="og:title" content="RecompHamr — Local-first RE coding agent" />
+  <meta property="og:description" content="A lightweight terminal agent built for reverse engineering, decompilation, recompilation, Ghidra/MCP workflows, and local LLMs." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/DohmBoy64Bit/RecompHamr/main/recomphamr.gif" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-glow page-glow-a"></div>
+  <div class="page-glow page-glow-b"></div>
+
+  <header class="site-header" aria-label="Primary navigation">
+    <a class="brand" href="#top" aria-label="RecompHamr home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" role="img">
+          <path d="M28.4 4.8 43.2 19.6l-5.1 5.1-3.7-3.7-7.9 7.9 3.1 3.1-5.3 5.3-3.1-3.1-10.9 10.9-6.4-6.4 10.9-10.9-3.1-3.1 5.3-5.3 3.1 3.1 7.9-7.9-4.7-4.7 5.1-5.1Z" />
+        </svg>
+      </span>
+      <span>RecompHamr</span>
+    </a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#install">Install</a>
+      <a href="#docs">Docs</a>
+    </nav>
+    <a class="button button-small" href="https://github.com/DohmBoy64Bit/RecompHamr" target="_blank" rel="noreferrer">GitHub</a>
+  </header>
+
+  <main id="top">
+    <section class="hero section-pad">
+      <div class="hero-copy">
+        <p class="eyebrow">RE-first · local-first · terminal-native</p>
+        <h1>Bring a hammer to reverse engineering work.</h1>
+        <p class="lede">
+          RecompHamr is a lightweight terminal coding agent built for reverse engineering,
+          decompilation, static recompilation, and unfamiliar native-code projects. It keeps
+          local LLM workflows practical while still supporting OpenAI-compatible endpoints.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#install">Install RecompHamr</a>
+          <a class="button button-ghost" href="https://github.com/DohmBoy64Bit/RecompHamr" target="_blank" rel="noreferrer">View source</a>
+        </div>
+        <div class="hero-pills" aria-label="Project highlights">
+          <span>Ghidra MCP</span>
+          <span>N64 / Xbox / PS workflows</span>
+          <span>AMD-priority profiles</span>
+          <span>Persistent project memory</span>
+        </div>
+      </div>
+
+      <aside class="terminal-card" aria-label="Terminal preview">
+        <div class="terminal-top">
+          <span></span><span></span><span></span>
+          <strong>recomphamr</strong>
+        </div>
+        <pre id="terminal-output"><code>$ recomphamr
+loading .rehamr/config.yaml
+active profile: lmstudio-amd
+skills: n64-re, xbox360-re, windows-game-re
+mcp: ghidra registered · n64-debug registered
+
+/rehamr &gt; /init-re
+created .rehamr/REPHAMR_STATE.md
+mode: evidence-first
+status: ready to audit, trace, verify</code></pre>
+      </aside>
+    </section>
+
+    <section class="trust-strip" aria-label="Core values">
+      <div><strong>Evidence-first</strong><span>No pretending when checks fail.</span></div>
+      <div><strong>Sandbox-aware</strong><span>Designed for devcontainers and VMs.</span></div>
+      <div><strong>Skill-backed</strong><span>RE methods load only when needed.</span></div>
+      <div><strong>MCP-ready</strong><span>Expose debugger and RE tools on demand.</span></div>
+    </section>
+
+    <section id="features" class="section-pad split-section">
+      <div>
+        <p class="eyebrow">Why it exists</p>
+        <h2>Built for native codebases that do not explain themselves.</h2>
+        <p>
+          RecompHamr extends CodeHAMR with reverse-engineering specific skills, MCP integration,
+          project handoff docs, and a system prompt tuned for codebases where symbols, docs, and
+          build history may be incomplete.
+        </p>
+      </div>
+      <div class="feature-grid">
+        <article>
+          <span class="icon">01</span>
+          <h3>Reverse-engineering skills</h3>
+          <p>Load methodology for N64, PS2, PS3, Xbox, Xbox 360, SNES, Game Boy, Windows, and PC recompilation work.</p>
+        </article>
+        <article>
+          <span class="icon">02</span>
+          <h3>Tool-gated MCP</h3>
+          <p>Connect Ghidra, emulator debuggers, object diffing, recomp tooling, and more without flooding the model context.</p>
+        </article>
+        <article>
+          <span class="icon">03</span>
+          <h3>Local model profiles</h3>
+          <p>Seed AMD-priority local profiles for LM Studio, Ollama, llama.cpp/Vulkan, or any compatible endpoint.</p>
+        </article>
+        <article>
+          <span class="icon">04</span>
+          <h3>Project memory</h3>
+          <p>Persist reverse-engineering state in <code>.rehamr/REPHAMR_STATE.md</code> so the next session starts with context.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="workflow" class="section-pad workflow-section">
+      <div class="section-heading">
+        <p class="eyebrow">Suggested flow</p>
+        <h2>Audit, trace, verify, then patch.</h2>
+        <p>Use RecompHamr for projects where the safest path is measured progress, not guesswork.</p>
+      </div>
+      <div class="timeline">
+        <article>
+          <span>1</span>
+          <h3>Initialize the workspace</h3>
+          <p>Run <code>/init-re</code> to create project state and capture assumptions before the agent starts modifying files.</p>
+        </article>
+        <article>
+          <span>2</span>
+          <h3>Load only the right skills</h3>
+          <p>Use <code>/skills</code> and <code>/skill &lt;name&gt;</code> so the prompt contains the methodology for your target platform.</p>
+        </article>
+        <article>
+          <span>3</span>
+          <h3>Connect MCP when useful</h3>
+          <p>Bring in Ghidra, emulator bridges, pcrecomp, objdiff, PCSX2, RPCS3, BizHawk, or other tools as needed.</p>
+        </article>
+        <article>
+          <span>4</span>
+          <h3>Verify the environment</h3>
+          <p>Run <code>/doctor</code> to check models, GPU drivers, toolchains, MCP status, endpoints, and workspace health.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="demo-section section-pad" aria-label="RecompHamr demo">
+      <div class="demo-card">
+        <div>
+          <p class="eyebrow">Terminal demo</p>
+          <h2>Lightweight enough to stay close to the repo.</h2>
+          <p>
+            Keep the workflow terminal-first: inspect files, generate focused patches, package reference repos,
+            and record verified state without switching into a heavy IDE plugin stack.
+          </p>
+          <a class="text-link" href="https://github.com/DohmBoy64Bit/RecompHamr/blob/main/recomphamr.gif" target="_blank" rel="noreferrer">Open the repo demo GIF →</a>
+        </div>
+        <img src="https://raw.githubusercontent.com/DohmBoy64Bit/RecompHamr/main/recomphamr.gif" alt="Animated terminal demo of RecompHamr" loading="lazy" />
+      </div>
+    </section>
+
+    <section id="install" class="section-pad install-section">
+      <div class="section-heading">
+        <p class="eyebrow">Install</p>
+        <h2>Build from source or install with Go.</h2>
+        <p>Requires Go and git. Run RecompHamr inside the project you want it to help analyze.</p>
+      </div>
+      <div class="install-grid">
+        <article class="code-card">
+          <div class="card-head">
+            <h3>Go install</h3>
+            <button class="copy-button" data-copy="go install github.com/DohmBoy64Bit/recomphamr/cmd/recomphamr@latest">Copy</button>
+          </div>
+          <pre><code>go install github.com/DohmBoy64Bit/recomphamr/cmd/recomphamr@latest</code></pre>
+        </article>
+        <article class="code-card">
+          <div class="card-head">
+            <h3>Build from source</h3>
+            <button class="copy-button" data-copy="git clone https://github.com/DohmBoy64Bit/RecompHamr.git&#10;cd RecompHamr&#10;go build -o recomphamr ./cmd/recomphamr/">Copy</button>
+          </div>
+          <pre><code>git clone https://github.com/DohmBoy64Bit/RecompHamr.git
+cd RecompHamr
+go build -o recomphamr ./cmd/recomphamr/</code></pre>
+        </article>
+      </div>
+      <div class="warning-card">
+        <strong>Run agents safely.</strong>
+        <span>Model-generated shell commands can access your filesystem. Use a devcontainer, VM, or disposable workspace for risky targets.</span>
+      </div>
+    </section>
+
+    <section id="docs" class="section-pad docs-section">
+      <div class="section-heading">
+        <p class="eyebrow">Docs map</p>
+        <h2>Jump straight to the pieces you will use most.</h2>
+      </div>
+      <div class="docs-grid">
+        <a href="https://github.com/DohmBoy64Bit/RecompHamr/blob/main/docs/skills.md" target="_blank" rel="noreferrer">
+          <strong>Skills</strong><span>Built-in and custom RE skill loading.</span>
+        </a>
+        <a href="https://github.com/DohmBoy64Bit/RecompHamr/blob/main/docs/mcp.md" target="_blank" rel="noreferrer">
+          <strong>MCP architecture</strong><span>Tool filtering, server flow, and integration model.</span>
+        </a>
+        <a href="https://github.com/DohmBoy64Bit/RecompHamr/blob/main/docs/doctor.md" target="_blank" rel="noreferrer">
+          <strong>Doctor</strong><span>Environment checks and validation output.</span>
+        </a>
+        <a href="https://github.com/DohmBoy64Bit/RecompHamr/blob/main/docs/memory.md" target="_blank" rel="noreferrer">
+          <strong>Memory</strong><span>Persistent state across sessions and clears.</span>
+        </a>
+        <a href="https://github.com/DohmBoy64Bit/RecompHamr/blob/main/docs/tool-repomixr.md" target="_blank" rel="noreferrer">
+          <strong>RepoMixr tool</strong><span>Clone and pack reference repos for review.</span>
+        </a>
+        <a href="https://github.com/DohmBoy64Bit/RecompHamr/blob/main/docs/profiles.md" target="_blank" rel="noreferrer">
+          <strong>Profiles</strong><span>Model endpoint and context configuration.</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="cta section-pad">
+      <div>
+        <p class="eyebrow">Ready for a hard target?</p>
+        <h2>Start with a workspace. Keep every claim verified.</h2>
+        <p>Open a project, run <code>recomphamr</code>, initialize RE state, load the right skill, and let the agent work close to the evidence.</p>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>RecompHamr — local-first coding agent for reverse engineering & static recompilation</span>
+    <span>MIT-licensed project · Fork of CodeHAMR.</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
