@@ -10,6 +10,7 @@ _sites_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file
 FILE_MAP = {
     '/': ('index.html', 'text/html; charset=utf-8'),
     '/index.html': ('index.html', 'text/html; charset=utf-8'),
+    '/social.png': ('social.png', 'image/png'),
 }
 
 
