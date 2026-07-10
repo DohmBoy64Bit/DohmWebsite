@@ -12,6 +12,10 @@
         {
             "src": "sites/recomphamr/**",
             "use": "@vercel/static"
+        },
+        {
+            "src": "sites/n64recompcompanion/**",
+            "use": "@vercel/static"
         }
     ],
     "routes": [

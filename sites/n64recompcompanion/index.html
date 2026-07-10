@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>N64Recomp Companion</title>
+  <meta name="description" content="A Windows-first workflow toolkit for taking a legally obtained N64 ROM project through Splat metadata, a big-endian MIPS ELF, N64Recomp code generation, and a host-runtime scaffold.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #0f1729;
+      --bg-card: #131b2e;
+      --bg-muted: #1a2440;
+      --border: #1e2d4a;
+      --text-primary: #e8edf5;
+      --text-secondary: #8892a8;
+      --accent: #22c55e;
+      --accent-glow: rgba(34, 197, 94, .25);
+      --accent-dim: #16a34a;
+      --n64-red: #ef4444;
+      --n64-blue: #3b82f6;
+      --n64-yellow: #eab308;
+      --radius: 8px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,.015) 2px, rgba(255,255,255,.015) 4px);
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(10, 14, 26, .85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    nav .container { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .logo {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: .5px;
+      text-shadow: 0 0 20px var(--accent-glow);
+    }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a {
+      color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; padding: 120px 0 80px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(ellipse at 30% 50%, rgba(34,197,94,.06) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 50%, rgba(59,130,246,.04) 0%, transparent 50%);
+      animation: hero-orbit 20s ease-in-out infinite alternate;
+    }
+    @keyframes hero-orbit {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(2%, -2%) rotate(3deg); }
+    }
+    .hero-content { position: relative; z-index: 1; text-align: center; max-width: 720px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.25);
+      padding: 6px 14px; border-radius: 100px; font-size: 11px; font-weight: 600;
+      color: var(--accent); margin-bottom: 24px; text-transform: uppercase; letter-spacing: .5px;
+    }
+    .hero h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(24px, 5vw, 42px);
+      line-height: 1.3;
+      margin-bottom: 8px;
+      text-shadow: 0 0 40px var(--accent-glow);
+    }
+    .hero h1 .accent { color: var(--accent); }
+    .hero-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(13px, 2vw, 16px);
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .hero p {
+      font-size: 15px; color: var(--text-secondary); max-width: 560px; margin: 16px auto 32px;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px; border-radius: var(--radius); font-size: 14px; font-weight: 600;
+      text-decoration: none; cursor: pointer; border: none; transition: all .2s;
+    }
+    .btn-primary {
+      background: var(--accent); color: #0a0e1a; box-shadow: 0 0 24px var(--accent-glow);
+    }
+    .btn-primary:hover { background: var(--accent-dim); transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent; color: var(--text-primary); border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--text-secondary); background: var(--bg-card); }
+    .btn-icon { width: 16px; height: 16px; }
+
+    /* Sections */
+    section { padding: 80px 0; }
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: clamp(24px, 3.5vw, 36px); font-weight: 700; margin-bottom: 12px;
+    }
+    .section-desc {
+      font-size: 15px; color: var(--text-secondary); max-width: 600px; margin-bottom: 48px;
+    }
+    .section-desc.full { max-width: none; }
+
+    /* Features grid */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 20px; }
+    .feature-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 24px; transition: all .25s; position: relative; overflow: hidden;
+    }
+    .feature-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,.3); }
+    .feature-card .icon {
+      width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px; font-size: 16px;
+    }
+    .feature-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* Workflow */
+    .workflow-visual { position: relative; padding: 40px 0; }
+    .workflow-track { position: relative; display: flex; flex-direction: column; gap: 0; }
+    .workflow-step {
+      display: flex; gap: 20px; padding: 20px 0; position: relative;
+    }
+    .workflow-step::before {
+      content: '';
+      position: absolute; left: 14px; top: 52px; bottom: -8px;
+      width: 2px; background: linear-gradient(to bottom, var(--border), transparent);
+    }
+    .workflow-step:last-child::before { display: none; }
+    .workflow-dot {
+      width: 30px; height: 30px; border-radius: 50%; background: var(--bg-card);
+      border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--accent); position: relative; z-index: 1;
+    }
+    .workflow-body { flex: 1; min-width: 0; padding-top: 4px; }
+    .workflow-body h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .workflow-body p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* Command groups */
+    .cmd-group { margin-bottom: 32px; }
+    .cmd-group h3 {
+      font-family: 'Space Mono', monospace;
+      font-size: 14px; color: var(--accent); margin-bottom: 12px;
+    }
+    .cmd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 8px; }
+    .cmd-item {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      padding: 10px 14px; font-family: 'Space Mono', monospace; font-size: 12px;
+      color: var(--text-secondary); transition: all .2s;
+    }
+    .cmd-item:hover { border-color: var(--accent); color: var(--text-primary); }
+    .cmd-item .cmd-name { color: var(--accent); font-weight: 700; }
+
+    /* Docs grid */
+    .docs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+    .doc-link {
+      display: block; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px; text-decoration: none; transition: all .25s;
+    }
+    .doc-link:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .doc-link span { display: block; }
+    .doc-link .doc-name {
+      font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;
+    }
+    .doc-link .doc-desc { font-size: 12px; color: var(--text-secondary); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border); padding: 48px 0 32px;
+      text-align: center; font-size: 13px; color: var(--text-secondary);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-meta { display: flex; gap: 24px; justify-content: center; margin: 16px 0 24px; flex-wrap: wrap; font-size: 12px; }
+    .footer-meta span { display: flex; align-items: center; gap: 4px; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero { padding: 100px 0 60px; }
+      section { padding: 60px 0; }
+      .features-grid { grid-template-columns: 1fr; }
+      .cmd-grid { grid-template-columns: 1fr; }
+      .docs-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .docs-grid { grid-template-columns: 1fr; }
+      .workflow-step { gap: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="#" class="logo">N64Recomp Companion</a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#commands">Commands</a>
+      <a href="#docs">Docs</a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion" target="_blank">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content container">
+    <div class="hero-badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      MIT License &middot; Python Toolkit
+    </div>
+    <h1>N64Recomp<br><span class="accent">Companion</span></h1>
+    <div class="hero-sub">ROM &rarr; Splat &rarr; ELF &rarr; Recomp &rarr; Runtime</div>
+    <p>A Windows-first workflow toolkit for taking a legally obtained N64 ROM through Splat metadata, a big-endian MIPS ELF, N64Recomp code generation, and a host-runtime scaffold. Includes readiness audits, ROM matching gates, Podman tooling, CDB evidence helpers, and an optional read-only Mupen64MCP workflow.</p>
+    <div class="hero-actions">
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion" class="btn btn-primary">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        View on GitHub
+      </a>
+      <a href="#features" class="btn btn-outline">Get Started</a>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">What's in the box</h2>
+    <p class="section-desc">Everything you need to go from a dumped ROM to a debuggable PC port — no game code shipped, no assumptions made.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon" style="background: rgba(34,197,94,.12); color: var(--accent);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>ROM &amp; Workspace</h3>
+        <p>Inspect, convert, and manage ROMs. Validate workspace structure with <code>rom-info</code>, <code>convert-rom</code>, and <code>workspace-status</code>.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background: rgba(59,130,246,.12); color: var(--n64-blue);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        </div>
+        <h3>Splat &amp; Matching</h3>
+        <p>Initialize, split, and refine Splat configurations. Build matching ROMs with the assembly-only match gate when applicable.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background: rgba(234,179,8,.12); color: var(--n64-yellow);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3>ELF &amp; Toolchain</h3>
+        <p>Build MIPS ELF files from Splat output. Run symbol audits, toolchain checks, and MIPS smoke tests.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background: rgba(239,68,68,.12); color: var(--n64-red);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3>N64Recomp Pipeline</h3>
+        <p>Generate C code from your ELF via N64Recomp. Validate TOML configs, summarize output, and iteratively refine ignored functions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background: rgba(34,197,94,.12); color: var(--accent);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Readiness &amp; Repair</h3>
+        <p>Scan for unsupported instructions, filter ELF exports, repair TOML/YAML configs with atomic replacement and dry-run reports.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background: rgba(59,130,246,.12); color: var(--n64-blue);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        </div>
+        <h3>Windows Host Scaffold</h3>
+        <p>Generate a complete SDL2 + RT64 + RmlUi runtime project from a template. Includes CMake, vcpkg, and build scripts.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background: rgba(234,179,8,.12); color: var(--n64-yellow);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg>
+        </div>
+        <h3>Local LLM &amp; MCP</h3>
+        <p>Read-only-by-default Mupen64MCP integration with local LLM agents. Controller and memory-write tools require explicit opt-in.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon" style="background: rgba(239,68,68,.12); color: var(--n64-red);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <h3>Real ROM Test Suite</h3>
+        <p>Non-destructive validation against a dumped ROM. Validates all core generators, repair helpers, and project discovery.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="workflow" style="background: var(--bg-secondary);">
+  <div class="container">
+    <div class="section-label">Workflow</div>
+    <h2 class="section-title">Canonical pipeline</h2>
+    <p class="section-desc">The evidence-driven loop that takes you from ROM to a debugged PC port.</p>
+    <div class="workflow-visual">
+      <div class="workflow-track">
+        <div class="workflow-step">
+          <div class="workflow-dot">1</div>
+          <div class="workflow-body">
+            <h4>ROM Inspection</h4>
+            <p>Validate and convert your dumped ROM to the correct byte-order format for Splat consumption.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-dot">2</div>
+          <div class="workflow-body">
+            <h4>Splat Split &amp; Refine</h4>
+            <p>Configure and run Splat to disassemble the ROM into manageable source files with proper metadata.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-dot">3</div>
+          <div class="workflow-body">
+            <h4>Assembly Match Gate</h4>
+            <p>Verify the disassembly builds to a byte-identical image of the original ROM (optional but recommended).</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-dot">4</div>
+          <div class="workflow-body">
+            <h4>MIPS ELF Build</h4>
+            <p>Produce a big-endian MIPS ELF that N64Recomp can consume. Run symbol audits and readiness checks.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-dot">5</div>
+          <div class="workflow-body">
+            <h4>N64Recomp Code Gen</h4>
+            <p>Validate your TOML configuration and generate C++ from the ELF via N64Recomp.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-dot">6</div>
+          <div class="workflow-body">
+            <h4>Host / Runtime Build</h4>
+            <p>Compile the generated C++ with the RT64 + RmlUi runtime scaffold into a Windows executable.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-dot">7</div>
+          <div class="workflow-body">
+            <h4>Evidence &amp; Fix</h4>
+            <p>Use CDB or Mupen64MCP to investigate runtime behavior. Fix the owning source of truth and rebuild the narrowest affected stage.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="commands">
+  <div class="container">
+    <div class="section-label">Command Reference</div>
+    <h2 class="section-title">Core commands</h2>
+    <p class="section-desc">All commands are accessible via <code>python -m n64recomp_kit</code> or the thin wrappers in <code>tools/</code>.</p>
+
+    <div class="cmd-group">
+      <h3>ROM &amp; Workspace</h3>
+      <div class="cmd-grid">
+        <div class="cmd-item"><span class="cmd-name">rom-info</span> &lt;rom&gt;</div>
+        <div class="cmd-item"><span class="cmd-name">convert-rom</span> &lt;input&gt; &lt;output&gt;</div>
+        <div class="cmd-item"><span class="cmd-name">workspace-status</span> --root .</div>
+        <div class="cmd-item"><span class="cmd-name">init-state</span> --root .</div>
+        <div class="cmd-item"><span class="cmd-name">init-ledger</span> --root .</div>
+      </div>
+    </div>
+
+    <div class="cmd-group">
+      <h3>Splat &amp; Matching</h3>
+      <div class="cmd-grid">
+        <div class="cmd-item"><span class="cmd-name">splat-init</span> --config decomp/splat.yaml</div>
+        <div class="cmd-item"><span class="cmd-name">splat-run</span> decomp/splat.yaml --report build/report.json</div>
+        <div class="cmd-item"><span class="cmd-name">matching-build</span> --root decomp --clean --diff</div>
+        <div class="cmd-item"><span class="cmd-name">emit-matching-configure</span> --root decomp</div>
+      </div>
+    </div>
+
+    <div class="cmd-group">
+      <h3>ELF &amp; Toolchain</h3>
+      <div class="cmd-grid">
+        <div class="cmd-item"><span class="cmd-name">build-elf</span> --config decomp/splat.yaml</div>
+        <div class="cmd-item"><span class="cmd-name">elf-info</span> decomp/build/starfall_us.elf</div>
+        <div class="cmd-item"><span class="cmd-name">elf-symbol-audit</span> --elf build/starfall_us.elf</div>
+        <div class="cmd-item"><span class="cmd-name">toolchain-info</span></div>
+        <div class="cmd-item"><span class="cmd-name">mips-smoke</span> --output-dir build/mips-smoke</div>
+      </div>
+    </div>
+
+    <div class="cmd-group">
+      <h3>N64Recomp</h3>
+      <div class="cmd-grid">
+        <div class="cmd-item"><span class="cmd-name">init</span> --config decomp/starfall.recomp.toml</div>
+        <div class="cmd-item"><span class="cmd-name">check-config</span> decomp/starfall.recomp.toml</div>
+        <div class="cmd-item"><span class="cmd-name">run</span> decomp/starfall.recomp.toml --report build/report.json</div>
+        <div class="cmd-item"><span class="cmd-name">summarize-output</span> RecompiledFuncs</div>
+        <div class="cmd-item"><span class="cmd-name">recomp-smoke</span> --config decomp/starfall.recomp.toml</div>
+      </div>
+    </div>
+
+    <div class="cmd-group">
+      <h3>Host &amp; LLM</h3>
+      <div class="cmd-grid">
+        <div class="cmd-item"><span class="cmd-name">new-runtime-project</span> --output runtime/Starfall64</div>
+        <div class="cmd-item"><span class="cmd-name">emit-local-llm-workflow</span> --root .</div>
+        <div class="cmd-item"><span class="cmd-name">local-llm-doctor</span> --mupen-root $env:MUPEN64MCP_ROOT</div>
+        <div class="cmd-item"><span class="cmd-name">local-llm-ask</span> --provider lmstudio --model $ModelId</div>
+        <div class="cmd-item"><span class="cmd-name">real-rom-test</span> --rom C:/roms/starfall_us.z64</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="docs" style="background: var(--bg-secondary);">
+  <div class="container">
+    <div class="section-label">Documentation</div>
+    <h2 class="section-title">Everything explained</h2>
+    <p class="section-desc">Comprehensive guides for every stage of the pipeline, from setup through debugging.</p>
+    <div class="docs-grid">
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/end-to-end.md" class="doc-link">
+        <span class="doc-name">End-to-End Walkthrough</span>
+        <span class="doc-desc">Complete fictional project guide from workspace creation through rebuild/debug</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/windows-setup.md" class="doc-link">
+        <span class="doc-name">Windows Setup</span>
+        <span class="doc-desc">Detailed native setup instructions with Visual Studio, CMake, and Python</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/elf-generation.md" class="doc-link">
+        <span class="doc-name">ELF Generation</span>
+        <span class="doc-desc">Building MIPS ELF files from Splat output</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/n64recomp-workflow.md" class="doc-link">
+        <span class="doc-name">N64Recomp Workflow</span>
+        <span class="doc-desc">TOML config, code generation, and output management</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/readiness-and-repair.md" class="doc-link">
+        <span class="doc-name">Readiness &amp; Repair</span>
+        <span class="doc-desc">ELF export filtering, unsupported-instruction scans, config repair</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/runtime-starter.md" class="doc-link">
+        <span class="doc-name">Runtime Starter</span>
+        <span class="doc-desc">SDL2, RT64, and RmlUi project scaffold guide</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/local-llm-mcp.md" class="doc-link">
+        <span class="doc-name">Local LLM &amp; MCP</span>
+        <span class="doc-desc">Mupen64MCP integration with read-only agent workflow</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/podman.md" class="doc-link">
+        <span class="doc-name">Podman Environment</span>
+        <span class="doc-desc">Container-based Linux tool environment with Splat and MIPS tools</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/real-rom-test-suite.md" class="doc-link">
+        <span class="doc-name">Real ROM Test Suite</span>
+        <span class="doc-desc">Non-destructive local validation against a dumped ROM</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/splat-and-toolchain.md" class="doc-link">
+        <span class="doc-name">Splat &amp; Toolchain</span>
+        <span class="doc-desc">Splat configuration, MIPS toolchain, and matching builds</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/troubleshooting.md" class="doc-link">
+        <span class="doc-name">Troubleshooting</span>
+        <span class="doc-desc">Common issues, failure ownership, and recovery paths</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/config-reference.md" class="doc-link">
+        <span class="doc-name">Config Reference</span>
+        <span class="doc-desc">Full TOML/YAML configuration specification</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/audit-remediation.md" class="doc-link">
+        <span class="doc-name">Audit Remediation</span>
+        <span class="doc-desc">Full audit remediation map</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/legal-and-scope.md" class="doc-link">
+        <span class="doc-name">Legal &amp; Scope</span>
+        <span class="doc-desc">Scope boundaries, licensing, and compliance</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/release-verification.md" class="doc-link">
+        <span class="doc-name">Release Verification</span>
+        <span class="doc-desc">Release process and verification checklist</span>
+      </a>
+      <a href="https://github.com/DohmBoy64Bit/n64recomp-companion/blob/master/docs/verified-facts.md" class="doc-link">
+        <span class="doc-name">Verified Facts</span>
+        <span class="doc-desc">Documented evidence and source-of-truth records</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-meta">
+      <span>MIT License</span>
+      <span>Python 88.5% &middot; PowerShell 5.3% &middot; C++ 2.2%</span>
+      <span>6 commits</span>
+    </div>
+    <p><a href="https://github.com/DohmBoy64Bit/n64recomp-companion">DohmBoy64Bit/n64recomp-companion</a> &mdash; N64Recomp Companion</p>
+  </div>
+</footer>
+
+</body>
+</html>

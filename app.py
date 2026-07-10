@@ -26,6 +26,8 @@ app.register_blueprint(shortener)
 app.register_blueprint(image_routes)
 from routes.recomphamr_routes import recomphamr
 app.register_blueprint(recomphamr)
+from routes.n64recompcompanion_routes import n64recompcompanion
+app.register_blueprint(n64recompcompanion)
 from routes.temp_site_routes import temp_site
 app.register_blueprint(temp_site)
 #app.register_blueprint(pdf_converter)
